@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../lib/prisma';
+import { generateTokens } from '../../../lib/jwt';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
 
 type RequestObj = {
   username: string;
@@ -40,7 +39,21 @@ export async function POST(request: Request) {
 
     if (!user) throw new Error('DB failed to create user');
 
-    return NextResponse.json({ user }, { status: 201 });
+    const { accessToken, refreshToken } = generateTokens({
+      id: user.id,
+      username: user.username,
+    });
+
+    const response = NextResponse.json({ user }, { status: 201 });
+
+    response.cookies.set('auth', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60,
+      sameSite: 'strict',
+      secure: true,
+    });
+
+    return response;
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }
