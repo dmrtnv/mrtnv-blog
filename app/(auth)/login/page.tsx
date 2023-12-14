@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,10 +21,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import { useState } from 'react';
-import { Loader, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
 
 const API_URL = 'http://localhost:3000/api/';
 
@@ -129,6 +131,15 @@ function LoginPage() {
           </form>
         </Form>
       </CardContent>
+      <CardFooter className='flex flex-col'>
+        <Separator className='mb-4 ' />
+        <CardDescription>
+          Do not have an account?
+          <Button variant='link' className='text-inherit'>
+            <Link href='/signup'>Sign Up!</Link>
+          </Button>
+        </CardDescription>
+      </CardFooter>
     </Card>
   );
 }
