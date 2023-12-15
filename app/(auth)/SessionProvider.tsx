@@ -1,6 +1,7 @@
 'use client';
 
 import axios, { Axios, AxiosError } from 'axios';
+import { usePathname } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type SessionContexProps = {
@@ -41,6 +42,7 @@ async function getSession(): Promise<SessionContexProps> {
 function SessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<SessionContexProps['status']>('loading');
   const [data, setData] = useState<SessionContexProps['data']>();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchSessionData = async () => {
@@ -53,7 +55,7 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
     };
 
     fetchSessionData();
-  }, []);
+  }, [pathname]);
 
   return <SessionContex.Provider value={{ data, status }}>{children}</SessionContex.Provider>;
 }
