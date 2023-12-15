@@ -1,6 +1,6 @@
 'use client';
 
-import axios, { Axios, AxiosError } from 'axios';
+import axios from 'axios';
 import { usePathname } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
@@ -29,12 +29,6 @@ async function getSession(): Promise<SessionContexProps> {
 
     return { status: session.status, data: session.data };
   } catch (err: unknown) {
-    if (err instanceof AxiosError && err.response) {
-      console.log(err.response.data);
-      console.log(err.response.status);
-      console.log(err.response.headers);
-    }
-
     return { status: 'unauthenticated' };
   }
 }
@@ -46,11 +40,11 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchSessionData = async () => {
-      setStatus('loading');
+      if (status !== 'authenticated') setStatus('loading');
 
-      const { status, data } = await getSession();
+      const { status: sessionStatus, data } = await getSession();
 
-      setStatus(status);
+      setStatus(sessionStatus);
       setData(data);
     };
 

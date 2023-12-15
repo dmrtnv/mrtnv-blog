@@ -1,5 +1,5 @@
 import prisma from '../../../lib/prisma';
-import { generateTokens } from '../../../lib/jwt';
+import { accessCookieOptions, generateTokens, refreshCookieOptions } from '@/lib/jwt';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 
@@ -43,12 +43,9 @@ export async function POST(request: Request) {
 
     const response = NextResponse.json({ user }, { status: 201 });
 
-    response.cookies.set('auth', accessToken, {
-      httpOnly: true,
-      maxAge: 5 * 60,
-      sameSite: 'strict',
-      secure: true,
-    });
+    response.cookies.set('auth', accessToken, accessCookieOptions);
+
+    response.cookies.set('refresh', refreshToken, refreshCookieOptions);
 
     return response;
   } catch (err: any) {
