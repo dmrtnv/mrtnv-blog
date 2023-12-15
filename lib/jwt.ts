@@ -11,3 +11,7 @@ export function generateTokens(payload: any) {
 
   return { accessToken, refreshToken };
 }
+
+export function verifyAccess(token: string) {
+  return jwt.verify(token, process.env.JWT_ACCESS_SECRET ?? '');
+}

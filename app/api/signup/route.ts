@@ -20,10 +20,7 @@ export async function POST(request: Request) {
   });
 
   if (!!usernameTaken) {
-    return NextResponse.json(
-      { error: 'Username already taken' },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: 'Username already taken' }, { status: 403 });
   }
 
   try {

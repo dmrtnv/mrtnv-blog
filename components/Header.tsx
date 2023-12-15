@@ -1,16 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { ModeToggle } from './mode-toggle';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { useSession } from '@/app/(auth)/SessionProvider';
 
 function Header() {
+  const { status, data } = useSession();
+
   return (
     <div className='flex w-full items-center border-b-2 p-4'>
-      <Button variant='ghost' className='mr-auto text-lg' asChild>
+      <Button variant='ghost' className='text-lg' asChild>
         <Link href='/'>Header</Link>
       </Button>
+
+      <div className='ml-2 mr-auto'>
+        <div>{status}</div>
+        <div>{JSON.stringify(data)}</div>
+      </div>
 
       <ModeToggle />
       <div className='flex items-center gap-1'>
