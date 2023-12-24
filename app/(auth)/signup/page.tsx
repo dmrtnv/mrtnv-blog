@@ -3,31 +3,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-
-const API_URL = 'http://localhost:3000/api/';
+import { useSession } from '../SessionProvider';
 
 const formSchema = z
   .object({
@@ -41,9 +26,7 @@ const formSchema = z
         async (username) => {
           if (!username) return true;
 
-          const { userExists } = (
-            await axios.get(`${API_URL}/users/${username}`)
-          ).data;
+          const { userExists } = (await axios.get(`/api/users/${username}`)).data;
 
           return !userExists;
         },
@@ -66,6 +49,7 @@ type Input = z.infer<typeof formSchema>;
 function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { updateSession } = useSession();
 
   const form = useForm<Input>({
     resolver: zodResolver(formSchema),
@@ -79,12 +63,14 @@ function SignupPage() {
   async function onSubmit(values: Input) {
     setIsLoading(true);
 
-    const result = await axios.post(`${API_URL}/signup`, values);
+    const result = await axios.post('/api/signup', values);
 
     form.reset();
     console.log(result);
 
     setIsLoading(false);
+
+    updateSession();
 
     router.push('/');
   }
@@ -93,17 +79,12 @@ function SignupPage() {
     <Card className='mx-auto mt-4 max-w-lg'>
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
-        <CardDescription>
-          By signibg up you will be registered as new user
-        </CardDescription>
+        <CardDescription>By signibg up you will be registered as new user</CardDescription>
       </CardHeader>
 
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col space-y-8'
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col space-y-8'>
             <FormField
               control={form.control}
               name='username'
@@ -128,9 +109,7 @@ function SignupPage() {
                   <FormControl>
                     <Input placeholder='password' type='password' {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is password for your account.
-                  </FormDescription>
+                  <FormDescription>This is password for your account.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -143,26 +122,16 @@ function SignupPage() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='Confirm password'
-                      type='password'
-                      {...field}
-                    />
+                    <Input placeholder='Confirm password' type='password' {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Confirm password for your account.
-                  </FormDescription>
+                  <FormDescription>Confirm password for your account.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <div className='flex items-center justify-end'>
-              {isLoading ? (
-                <Loader2 className='animate-spin' />
-              ) : (
-                <Button type='submit'>Register</Button>
-              )}
+              {isLoading ? <Loader2 className='animate-spin' /> : <Button type='submit'>Register</Button>}
             </div>
           </form>
         </Form>

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     if (!user) throw new Error('DB failed to create user');
 
-    const { accessToken, refreshToken } = generateTokens({
+    const { accessToken, refreshToken } = await generateTokens({
       id: user.id,
       username: user.username,
     });

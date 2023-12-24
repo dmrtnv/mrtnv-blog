@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ field: 'password', error: 'Wrong password' }, { status: 401 });
   }
 
-  const { accessToken, refreshToken } = generateTokens({
+  const { accessToken, refreshToken } = await generateTokens({
     id: user.id,
     username: user.username,
   });

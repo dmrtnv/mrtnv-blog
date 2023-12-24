@@ -1,10 +1,23 @@
 'use client';
 
-import axios from 'axios';
-import { usePathname } from 'next/navigation';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios, { getAxiosClientWithInterceptor } from '@/lib/axios';
+import { AxiosInstance } from 'axios';
+import React, { createContext, useContext, useLayoutEffect, useState } from 'react';
 
 type SessionContexProps = {
+  data?: {
+    user: {
+      id: string;
+      username: string;
+    };
+    expires: string;
+  } | null;
+  status: 'loading' | 'authenticated' | 'unauthenticated';
+  updateSession: () => void;
+  axiosClient: AxiosInstance;
+};
+
+type SessionInfo = {
   data?: {
     user: {
       id: string;
@@ -16,12 +29,14 @@ type SessionContexProps = {
 };
 
 const InitialSessionContext: SessionContexProps = {
-  status: 'authenticated',
+  status: 'unauthenticated',
+  axiosClient: axios,
+  updateSession: () => {},
 };
 
 const SessionContex = createContext<SessionContexProps>(InitialSessionContext);
 
-async function getSession(): Promise<SessionContexProps> {
+async function getSession(): Promise<SessionInfo> {
   try {
     const response = await axios.get('/api/session');
     const { session }: { session: SessionContexProps } = response.data;
@@ -36,32 +51,44 @@ async function getSession(): Promise<SessionContexProps> {
 function SessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<SessionContexProps['status']>('loading');
   const [data, setData] = useState<SessionContexProps['data']>();
-  const pathname = usePathname();
 
-  useEffect(() => {
-    const fetchSessionData = async () => {
-      if (status !== 'authenticated') setStatus('loading');
+  const fetchSessionData = async () => {
+    if (status !== 'authenticated') setStatus('loading');
 
-      const { status: sessionStatus, data } = await getSession();
+    let session = await getSession();
 
-      setStatus(sessionStatus);
-      setData(data);
-    };
+    setStatus(session.status);
+    setData(session.data);
+  };
 
+  const useAxiosClient = () => {
+    return getAxiosClientWithInterceptor(fetchSessionData);
+  };
+
+  useLayoutEffect(() => {
     fetchSessionData();
-  }, [pathname]);
+  }, []);
 
-  return <SessionContex.Provider value={{ data, status }}>{children}</SessionContex.Provider>;
+  return (
+    <SessionContex.Provider value={{ data, status, updateSession: fetchSessionData, axiosClient: useAxiosClient() }}>
+      {children}
+    </SessionContex.Provider>
+  );
 }
 
 function useSession() {
-  const contex = useContext(SessionContex);
+  const context = useContext(SessionContex);
 
-  if (!contex) {
+  if (!context) {
     throw new Error('useSession must be used within a SessionProvider');
   }
 
-  return contex;
+  return {
+    status: context.status,
+    user: context.data?.user,
+    updateSession: context.updateSession,
+    axios: context.axiosClient,
+  };
 }
 
 export { SessionProvider, useSession, getSession };

@@ -21,12 +21,18 @@ type Session = {
   status: 'loading' | 'authenticated' | 'unauthenticated';
 };
 
-export async function GET(request: NextRequest): Promise<NextResponse<{ session: Session }>> {
+export async function GET(request: NextRequest) {
   const authCookie = await request.cookies.get('auth');
 
   if (!authCookie) return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
 
-  const cookiePayload = (await verifyAccess(authCookie?.value)) as CookiePayload;
+  let cookiePayload;
+
+  try {
+    cookiePayload = (await verifyAccess(authCookie?.value)) as CookiePayload;
+  } catch (error: unknown) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
 
   const sessionData: SessionData = {
     user: {

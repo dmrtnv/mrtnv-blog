@@ -10,18 +10,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useSession } from '@/app/(auth)/SessionProvider';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 function UserDropdown() {
-  const { data } = useSession();
-  const user = data?.user;
+  const { user, axios, updateSession } = useSession();
 
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       const result = await axios.get('/api/logout');
+
+      updateSession();
 
       router.push('/');
     } catch (err: unknown) {

@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
+import * as jose from 'jose';
 
 const JWT_ACCESS_MAX_AGE = 300;
 const JWT_REFRESH_MAX_AGE = 86400;
+
+const ACCESS_SECRET = new TextEncoder().encode(process.env.JWT_ACCESS_SECRET);
+const REFRESH_SECRET = new TextEncoder().encode(process.env.JWT_REFRESH_SECRET);
 
 type CookieOptions = {
   httpOnly: boolean;
@@ -23,30 +27,48 @@ export const refreshCookieOptions: CookieOptions = {
   maxAge: JWT_REFRESH_MAX_AGE,
 };
 
-export function generateTokens(payload: any) {
-  return { accessToken: generateAccess(payload), refreshToken: generateRefresh(payload) };
+export async function generateTokens(payload: any) {
+  return { accessToken: await generateAccess(payload), refreshToken: await generateRefresh(payload) };
 }
 
-export function generateAccess(payload: any) {
-  const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET ?? '', {
-    expiresIn: JWT_ACCESS_MAX_AGE,
-  });
+export async function generateAccess(payload: any) {
+  // const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET ?? '', {
+  //   expiresIn: JWT_ACCESS_MAX_AGE,
+  // });
+
+  const accessToken = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('5m')
+    .sign(ACCESS_SECRET);
 
   return accessToken;
 }
 
-export function generateRefresh(payload: any) {
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET ?? '', {
-    expiresIn: JWT_REFRESH_MAX_AGE,
-  });
+export async function generateRefresh(payload: any) {
+  // const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET ?? '', {
+  //   expiresIn: JWT_REFRESH_MAX_AGE,
+  // });
+
+  const refreshToken = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('1d')
+    .sign(REFRESH_SECRET);
 
   return refreshToken;
 }
 
-export function verifyAccess(token: string) {
-  return jwt.verify(token, process.env.JWT_ACCESS_SECRET ?? '');
+export async function verifyAccess(token: string) {
+  const { payload } = await jose.jwtVerify(token, ACCESS_SECRET);
+
+  return payload;
+
+  // return jwt.verify(token, process.env.JWT_ACCESS_SECRET ?? '');
 }
 
-export function verifyRefresh(token: string) {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET ?? '');
+export async function verifyRefresh(token: string) {
+  const { payload } = await jose.jwtVerify(token, REFRESH_SECRET);
+
+  return payload;
+
+  // return jwt.verify(token, process.env.JWT_REFRESH_SECRET ?? '');
 }
