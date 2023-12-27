@@ -2,6 +2,7 @@
 
 import axios, { getAxiosClientWithInterceptor } from '@/lib/axios';
 import { AxiosInstance } from 'axios';
+import { useRouter } from 'next/navigation';
 import React, { createContext, useContext, useLayoutEffect, useState } from 'react';
 
 type SessionContexProps = {
@@ -51,6 +52,7 @@ async function getSession(): Promise<SessionInfo> {
 function SessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<SessionContexProps['status']>('loading');
   const [data, setData] = useState<SessionContexProps['data']>();
+  const router = useRouter();
 
   const fetchSessionData = async () => {
     if (status !== 'authenticated') setStatus('loading');
@@ -62,7 +64,7 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
   };
 
   const useAxiosClient = () => {
-    return getAxiosClientWithInterceptor(fetchSessionData);
+    return getAxiosClientWithInterceptor(fetchSessionData, router);
   };
 
   useLayoutEffect(() => {
