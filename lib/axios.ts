@@ -8,9 +8,14 @@ declare module 'axios' {
   }
 }
 
-export function getAxiosClientWithInterceptor(updateSession: (() => void) | null = null) {
+export function getAxiosClientWithInterceptor(updateSession: (() => void) | null = null, router: any = null) {
   const axiosClient = axios.create({
     baseURL: BASE_URL,
+    headers: {
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0',
+    },
   });
 
   axiosClient.interceptors.response.use(
@@ -35,6 +40,10 @@ export function getAxiosClientWithInterceptor(updateSession: (() => void) | null
           return axiosClient(prevRequest);
         } catch (err) {
           console.error(err);
+
+          if (router) {
+            router.push('/login');
+          }
         }
       }
 
