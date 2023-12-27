@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useSession } from '@/app/(auth)/SessionProvider';
-import { Button } from './ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -33,7 +32,7 @@ function UserDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src='https://github.com/shadcn.png' />
+          <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
           <AvatarFallback>{user?.username[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
