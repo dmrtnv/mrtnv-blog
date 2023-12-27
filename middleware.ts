@@ -25,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/logout', '/api/posts'],
+  matcher: ['/api/logout'],
 };
