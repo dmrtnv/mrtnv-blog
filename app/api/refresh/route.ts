@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
   if (!user) return NextResponse.json({ status: 401 });
 
-  const response = NextResponse.json({ message: 'updated access token' }, { status: 200 });
+  const response = NextResponse.json({ status: 200 });
 
   const accessToken = await generateAccess({ id: user.id, username: user.username });
 
