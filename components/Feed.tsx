@@ -1,20 +1,30 @@
-'use client';
-
-import fetchPosts from '@/api/fetchPosts';
+// import { useSession } from '@/app/(auth)/SessionProvider';
 import Post from './Post';
-import PostType from '@/types/PostType';
-import { useLayoutEffect, useState } from 'react';
+import { z } from 'zod';
+import axios from '@/lib/axios';
 
-function Feed() {
-  const [posts, setPosts] = useState<PostType[] | null>(null);
+const PostSchema = z.array(
+  z.object({
+    title: z.string(),
+    body: z.string(),
+  }),
+);
 
-  useLayoutEffect(() => {
-    (async () => {
-      const posts = await fetchPosts();
+async function Feed() {
+  // const { axios } = useSession();
 
-      setPosts(posts);
-    })();
-  }, []);
+  const fetchPosts = async () => {
+    try {
+      const result = await axios.get('/api/posts');
+
+      return PostSchema.parse(result.data.posts);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const posts = await fetchPosts();
 
   if (!posts) return <div>No posts</div>;
 
