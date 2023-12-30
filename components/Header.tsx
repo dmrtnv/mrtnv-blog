@@ -11,7 +11,7 @@ function Header() {
   const { status } = useSession();
 
   return (
-    <div className='sticky top-0 z-50 flex w-full items-center border-b-2 bg-inherit p-4'>
+    <div className='sticky top-0 z-50 flex w-full items-center gap-2 border-b-2 bg-inherit p-4'>
       <Button variant='ghost' className='text-lg' asChild>
         <Link href='/'>Header</Link>
       </Button>
