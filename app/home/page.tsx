@@ -1,7 +1,13 @@
 import Feed from '@/components/Feed';
+import NewPost from '@/components/NewPost';
 
 function HomePage() {
-  return <Feed />;
+  return (
+    <>
+      <NewPost />
+      <Feed />
+    </>
+  );
 }
 
 export default HomePage;
