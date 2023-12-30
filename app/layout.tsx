@@ -13,17 +13,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
           <Header />
-          <main>{children}</main>
+          <main className='container max-w-4xl px-0'>{children}</main>
         </Providers>
       </body>
     </html>
