@@ -29,7 +29,7 @@ async function Feed() {
   if (!posts) return <div>No posts</div>;
 
   return (
-    <ul className='mx-auto flex list-none flex-col items-center gap-2 p-2'>
+    <ul className='flex list-none flex-col items-center gap-2'>
       {posts.map((post) => (
         <li key={post.title}>
           <Post post={post} />

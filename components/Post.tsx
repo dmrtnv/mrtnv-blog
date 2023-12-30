@@ -5,7 +5,7 @@ import PostType from '@/types/PostType';
 
 function Post({ post }: { post: PostType }) {
   return (
-    <article className='max-w-3xl rounded-xl border p-4'>
+    <article className='rounded-xl border p-4'>
       <div className='flex items-center gap-4'>
         <UserHoverCard />
         <span>·</span>
