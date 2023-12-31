@@ -41,7 +41,6 @@ async function getSession(): Promise<SessionInfo> {
   try {
     const response = await axios.get('/api/session');
     const { session }: { session: SessionContexProps } = response.data;
-    console.log(session);
 
     return { status: session.status, data: session.data };
   } catch (err: unknown) {
