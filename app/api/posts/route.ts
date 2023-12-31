@@ -1,38 +1,79 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import prisma from '@/lib/prisma';
 
 const PostSchema = z.object({
-  title: z.string().min(1),
-  body: z.string().min(1),
+  text: z.string(),
+});
+
+const UserSchema = z.object({
+  id: z.string(),
+  username: z.string(),
 });
 
 export async function GET() {
-  const posts: z.infer<typeof PostSchema>[] = [
-    {
-      title: 'Exploring the Wonders of Nature',
-      body: 'Nature never ceases to amaze us with its beauty. From the towering mountains to the serene lakes, every aspect of nature holds a unique charm that captivates our senses. Exploring the wilderness teaches us valuable lessons about life and harmony. What is your favorite natural wonder?',
-    },
-    {
-      title: 'The Art of Mindfulness',
-      body: "In a fast-paced world, practicing mindfulness is crucial for our mental well-being. Taking a moment to breathe, observe, and appreciate the present can significantly impact our lives. Let's delve into the art of mindfulness and its positive effects on our daily routines.",
-    },
-    {
-      title: 'Unraveling the Mysteries of Space',
-      body: "The universe, with its vastness and mysteries, intrigues humanity. From distant galaxies to the enigmatic black holes, there's so much yet to discover. Let's embark on a journey to explore the cosmic wonders and expand our understanding of the universe.",
-    },
-  ];
+  try {
+    const posts = await prisma.post.findMany({
+      select: {
+        id: true,
+        text: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
 
-  return NextResponse.json({ posts }, { status: 200 });
+    return NextResponse.json({ posts }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  let post = await req.json();
+  const postData = await req.json();
+  const userData = JSON.parse((await req.headers.get('user-data')) as string);
 
+  // TODO
+  // Improve error handling!
+  // It is unclear wheather it is client or server error
   try {
-    post = PostSchema.parse(post);
+    const post = PostSchema.parse(postData);
+    const user = UserSchema.parse(userData);
+
+    const createdPost = await prisma.post.create({
+      data: {
+        text: post.text,
+        author: {
+          connect: { id: user.id },
+        },
+      },
+    });
+
+    const newPost = await prisma.post.findFirst({
+      where: { id: createdPost.id },
+      select: {
+        id: true,
+        text: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({ post: newPost }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: err }, { status: 406 });
   }
-
-  return NextResponse.json({ post }, { status: 201 });
 }
