@@ -1,6 +1,11 @@
 type PostType = {
-  title: string;
-  body: string;
+  text: string;
+  id: number;
+  createdAt: Date;
+  author: {
+    id: string;
+    username: string;
+  };
 };
 
 export default PostType;
