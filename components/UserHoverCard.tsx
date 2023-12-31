@@ -1,29 +1,29 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-function UserHoverCard() {
+function UserHoverCard({ user }: { user: { id: string; username: string } }) {
   return (
     <>
       <HoverCard>
         <HoverCardTrigger className='flex gap-4'>
           <Avatar className='cursor-pointer'>
             <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
-            <AvatarFallback>ST</AvatarFallback>
+            <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div className='cursor-pointer'>
-            <p className='w-max font-bold hover:underline'>Stepan the Cat</p>
-            <p>@stepan</p>
+            <p className='w-max font-bold hover:underline'>{user.username}</p>
+            <p>@{user.username}</p>
           </div>
         </HoverCardTrigger>
         <HoverCardContent>
           <div className='flex items-center gap-6'>
             <Avatar className='h-16 w-16 cursor-pointer'>
               <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
-              <AvatarFallback>ST</AvatarFallback>
+              <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
             </Avatar>
             <div className='cursor-pointer'>
-              <p className='w-max font-bold hover:underline'>Stepan the Cat</p>
-              <p>@stepan</p>
+              <p className='w-max font-bold hover:underline'>{user.username}</p>
+              <p>@{user.username}</p>
             </div>
           </div>
           <div className='mt-4'>
