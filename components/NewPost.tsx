@@ -10,13 +10,19 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useSession } from '@/app/(auth)/SessionProvider';
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
+import { Input } from './ui/input';
+import { usePostsContext } from '@/contexts/PostsProvider';
 
 const PostSchema = z.object({
-  text: z.string().min(1).max(280),
+  text: z.string().trim().min(1).max(280),
 });
 
 function NewPost() {
-  const { status, axios } = useSession();
+  const { status } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { addPost } = usePostsContext();
 
   const form = useForm<z.infer<typeof PostSchema>>({
     resolver: zodResolver(PostSchema),
@@ -43,12 +49,13 @@ function NewPost() {
   }
 
   const onSubmit = async (post: z.infer<typeof PostSchema>) => {
-    try {
-      const result = await axios.post('/api/posts', post);
-      console.log(result);
-    } catch (err) {
-      console.error(err);
-    }
+    setIsLoading(true);
+
+    addPost(post);
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    form.setValue('text', '');
+    setIsLoading(false);
   };
 
   return (
@@ -67,15 +74,16 @@ function NewPost() {
                   <FormItem>
                     <FormMessage />
                     <FormControl>
-                      <Textarea placeholder='Write your post!' className='resize-none space-y-8' {...field} />
+                      {/* <Textarea placeholder='Write your post!' className='resize-none space-y-8' {...field} /> */}
+                      <Input placeholder='Write your post!' className='space-y-8' {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
-            <Button type='submit' className='self-end'>
-              Submit
-            </Button>
+            <div className='border-white-100 flex w-[67px] items-end justify-center'>
+              {isLoading ? <Loader2 className='animate-spin' /> : <Button type='submit'>Post!</Button>}
+            </div>
           </form>
         </Form>
       </CardContent>

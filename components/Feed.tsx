@@ -1,37 +1,22 @@
-// import { useSession } from '@/app/(auth)/SessionProvider';
+'use client';
+
 import Post from './Post';
-import { z } from 'zod';
-import axios from '@/lib/axios';
+import { useLayoutEffect } from 'react';
+import { usePostsContext } from '@/contexts/PostsProvider';
 
-const PostSchema = z.array(
-  z.object({
-    title: z.string(),
-    body: z.string(),
-  }),
-);
+function Feed() {
+  const { posts, fetchPosts } = usePostsContext();
 
-async function Feed() {
-  // const { axios } = useSession();
-
-  const fetchPosts = async () => {
-    try {
-      const result = await axios.get('/api/posts');
-
-      return PostSchema.parse(result.data.posts);
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  const posts = await fetchPosts();
+  useLayoutEffect(() => {
+    fetchPosts();
+  }, []);
 
   if (!posts) return <div>No posts</div>;
 
   return (
     <ul className='flex list-none flex-col items-center gap-2'>
-      {posts.map((post) => (
-        <li key={post.title}>
+      {posts.toReversed().map((post) => (
+        <li className='w-full' key={post.id}>
           <Post post={post} />
         </li>
       ))}
