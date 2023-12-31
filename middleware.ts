@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     if (!data) throw new Error('Token has no data');
 
     const requestHeaders = new Headers(req.headers);
-    requestHeaders.set('user-data', JSON.stringify(data));
+    requestHeaders.set('user-data', JSON.stringify({ id: data.id, username: data.username }));
 
     return NextResponse.next({
       request: {
@@ -25,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/logout'],
+  matcher: ['/api/logout', '/api/posts'],
 };
