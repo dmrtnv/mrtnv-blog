@@ -24,6 +24,17 @@ export async function GET() {
             username: true,
           },
         },
+        likes: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'asc',
@@ -67,6 +78,17 @@ export async function POST(req: NextRequest) {
           select: {
             id: true,
             username: true,
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+              },
+            },
           },
         },
       },
