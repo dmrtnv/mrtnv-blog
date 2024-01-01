@@ -14,6 +14,15 @@ const PostSchema = z.array(
       id: z.string(),
       username: z.string(),
     }),
+    likes: z.array(
+      z.object({
+        id: z.number(),
+        user: z.object({
+          id: z.string(),
+          username: z.string(),
+        }),
+      }),
+    ),
   }),
 );
 
@@ -23,12 +32,13 @@ type PostsContextType = {
   posts: PostType[] | null;
   fetchPosts: () => Promise<void>;
   addPost: (post: NewPostType) => Promise<void>;
+  toggleLike: (postId: number) => Promise<void>;
 };
 
 const PostsContext = createContext<PostsContextType | null>(null);
 
 function PostsProvider({ children }: { children: React.ReactNode }) {
-  const [posts, setPosts] = useState<PostType[] | null>(null);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   const fetchPosts = async () => {
     try {
@@ -38,7 +48,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
       setPosts(posts);
     } catch (err) {
       console.error(err);
-      setPosts(null);
+      setPosts([]);
     }
   };
 
@@ -55,7 +65,22 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return <PostsContext.Provider value={{ posts, fetchPosts, addPost }}>{children}</PostsContext.Provider>;
+  const toggleLike = async (postId: number) => {
+    try {
+      const result = await axios.post(`/api/posts/${postId}/likes`);
+
+      const newLikes = result.data.likes;
+      const post = posts.find((post) => post.id === postId) as PostType;
+      const updatedPost = { ...post, likes: newLikes };
+      const updatedPosts = posts.map((post) => (post.id === updatedPost.id ? updatedPost : post));
+
+      setPosts(updatedPosts);
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  };
+
+  return <PostsContext.Provider value={{ posts, fetchPosts, addPost, toggleLike }}>{children}</PostsContext.Provider>;
 }
 
 function usePostsContext() {
