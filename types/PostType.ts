@@ -6,6 +6,13 @@ type PostType = {
     id: string;
     username: string;
   };
+  likes: {
+    id: number;
+    user: {
+      id: string;
+      username: string;
+    };
+  }[];
 };
 
 export default PostType;
