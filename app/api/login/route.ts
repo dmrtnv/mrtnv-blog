@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     username: user.username,
   });
 
-  const response = NextResponse.json({ user }, { status: 201 });
+  const response = NextResponse.json({ user: { id: user.id, username: user.username } }, { status: 201 });
 
   response.cookies.set('auth', accessToken, accessCookieOptions);
 
