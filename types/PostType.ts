@@ -5,6 +5,7 @@ type PostType = {
   author: {
     id: string;
     username: string;
+    fullName: string;
   };
   likes: {
     id: number;
