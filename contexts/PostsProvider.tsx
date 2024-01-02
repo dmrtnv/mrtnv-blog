@@ -13,6 +13,7 @@ const PostSchema = z.array(
     author: z.object({
       id: z.string(),
       username: z.string(),
+      fullName: z.string(),
     }),
     likes: z.array(
       z.object({

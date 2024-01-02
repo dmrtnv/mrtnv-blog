@@ -22,6 +22,7 @@ export async function GET() {
           select: {
             id: true,
             username: true,
+            fullName: true,
           },
         },
         likes: {
@@ -78,6 +79,7 @@ export async function POST(req: NextRequest) {
           select: {
             id: true,
             username: true,
+            fullName: true,
           },
         },
         likes: {
