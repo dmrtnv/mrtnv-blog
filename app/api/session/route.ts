@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAccess } from '@/lib/jwt';
+import prisma from '@/lib/prisma';
 
 type SessionData = {
   user: {
@@ -13,7 +14,6 @@ type SessionData = {
 type CookiePayload = {
   id: string;
   username: string;
-  fullName: string;
   exp: number;
   iat: number;
 };
@@ -28,22 +28,24 @@ export async function GET(request: NextRequest) {
 
   if (!authCookie) return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
 
-  let cookiePayload;
-
   try {
-    cookiePayload = (await verifyAccess(authCookie?.value)) as CookiePayload;
+    const cookiePayload = (await verifyAccess(authCookie?.value)) as CookiePayload;
+
+    const user = await prisma.user.findFirst({ where: { id: cookiePayload.id } });
+
+    if (!user) return NextResponse.json({ message: `${cookiePayload.username} does not exist` }, { status: 404 });
+
+    const sessionData: SessionData = {
+      user: {
+        id: user.id,
+        username: user.username,
+        fullName: user.fullName,
+      },
+      expires: cookiePayload.exp + '',
+    };
+
+    return NextResponse.json({ session: { data: sessionData, status: 'authenticated' } }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json({ error }, { status: 401 });
   }
-
-  const sessionData: SessionData = {
-    user: {
-      id: cookiePayload.id,
-      username: cookiePayload.username,
-      fullName: cookiePayload.fullName,
-    },
-    expires: cookiePayload.exp + '',
-  };
-
-  return NextResponse.json({ session: { data: sessionData, status: 'authenticated' } }, { status: 200 });
 }

@@ -41,7 +41,6 @@ export async function POST(request: Request) {
     const { accessToken, refreshToken } = await generateTokens({
       id: user.id,
       username: user.username,
-      fullName: user.fullName,
     });
 
     const response = NextResponse.json(
