@@ -1,30 +1,46 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 
-function UserHoverCard({ user }: { user: { id: string; username: string } }) {
+function UserHoverCard({ user }: { user: { id: string; username: string; fullName: string } }) {
   return (
     <>
       <HoverCard>
-        <HoverCardTrigger className='flex gap-4'>
-          <Avatar className='cursor-pointer'>
-            <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
-            <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
-          </Avatar>
-          <div className='cursor-pointer'>
-            <p className='w-max font-bold hover:underline'>{user.username}</p>
-            <p>@{user.username}</p>
+        <HoverCardTrigger asChild>
+          <div className='flex items-center gap-4'>
+            <Link href={`/${user.username}`}>
+              <Avatar className='cursor-pointer'>
+                <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
+                <AvatarFallback>
+                  {user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+            <Link href={`/${user.username}`}>
+              <div className='cursor-pointer'>
+                <p className='w-max font-bold hover:underline'>{user.fullName}</p>
+                <p>@{user.username}</p>
+              </div>
+            </Link>
           </div>
         </HoverCardTrigger>
+
         <HoverCardContent>
           <div className='flex items-center gap-6'>
-            <Avatar className='h-16 w-16 cursor-pointer'>
-              <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
-              <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-            <div className='cursor-pointer'>
-              <p className='w-max font-bold hover:underline'>{user.username}</p>
-              <p>@{user.username}</p>
-            </div>
+            <Link href={`/${user.username}`}>
+              <Avatar className='h-16 w-16 cursor-pointer'>
+                <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
+                <AvatarFallback>
+                  {user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+            <Link href={`/${user.username}`}>
+              <div className='cursor-pointer'>
+                <p className='w-max font-bold hover:underline'>{user.fullName}</p>
+                <p>@{user.username}</p>
+              </div>
+            </Link>
           </div>
           <div className='mt-4'>
             <p className='font-bold'>Bio</p>
@@ -32,10 +48,6 @@ function UserHoverCard({ user }: { user: { id: string; username: string } }) {
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste error architecto eaque modi autem
               voluptatibus.
             </p>
-          </div>
-          <div className='mt-4'>
-            <span className='mr-2 font-bold'>117</span>
-            <span>posts written</span>
           </div>
         </HoverCardContent>
       </HoverCard>
