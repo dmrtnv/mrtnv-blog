@@ -5,6 +5,7 @@ type SessionData = {
   user: {
     id: string;
     username: string;
+    fullName: string;
   };
   expires: string;
 };
@@ -12,6 +13,7 @@ type SessionData = {
 type CookiePayload = {
   id: string;
   username: string;
+  fullName: string;
   exp: number;
   iat: number;
 };
@@ -38,6 +40,7 @@ export async function GET(request: NextRequest) {
     user: {
       id: cookiePayload.id,
       username: cookiePayload.username,
+      fullName: cookiePayload.fullName,
     },
     expires: cookiePayload.exp + '',
   };

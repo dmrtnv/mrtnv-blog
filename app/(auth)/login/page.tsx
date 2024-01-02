@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { useSession } from '../SessionProvider';
 
-const API_URL = 'http://localhost:3000/api/';
+const URL = process.env.URL || 'http://localhost:3000/';
 
 const formSchema = z.object({
   username: z.string().trim().toLowerCase().min(1, { message: 'Enter username' }),
@@ -41,7 +41,7 @@ function LoginPage() {
     setIsLoading(true);
 
     try {
-      const result = await axios.post(`${API_URL}/login`, values);
+      const result = await axios.post(`${URL}/api/login`, values);
 
       setIsLoading(false);
 

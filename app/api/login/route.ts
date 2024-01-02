@@ -25,9 +25,13 @@ export async function POST(request: Request) {
   const { accessToken, refreshToken } = await generateTokens({
     id: user.id,
     username: user.username,
+    fullName: user.fullName,
   });
 
-  const response = NextResponse.json({ user: { id: user.id, username: user.username } }, { status: 201 });
+  const response = NextResponse.json(
+    { user: { id: user.id, username: user.username, fullName: user.fullName } },
+    { status: 200 },
+  );
 
   response.cookies.set('auth', accessToken, accessCookieOptions);
 

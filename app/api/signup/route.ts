@@ -1,17 +1,18 @@
-import prisma from '../../../lib/prisma';
+import prisma from '@/lib/prisma';
 import { accessCookieOptions, generateTokens, refreshCookieOptions } from '@/lib/jwt';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 
 type RequestObj = {
   username: string;
+  fullName: string;
   password: string;
 };
 
 const HASH_SALT = 10;
 
 export async function POST(request: Request) {
-  const { username, password }: RequestObj = await request.json();
+  const { username, fullName, password }: RequestObj = await request.json();
 
   const usernameTaken = await prisma.user.count({
     where: {
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
     const user = await prisma.user.create({
       data: {
         username,
+        fullName,
         passwordHash,
       },
     });
@@ -39,9 +41,13 @@ export async function POST(request: Request) {
     const { accessToken, refreshToken } = await generateTokens({
       id: user.id,
       username: user.username,
+      fullName: user.fullName,
     });
 
-    const response = NextResponse.json({ user: { id: user.id, username: user.username } }, { status: 201 });
+    const response = NextResponse.json(
+      { user: { id: user.id, username: user.username, fullName: user.fullName } },
+      { status: 201 },
+    );
 
     response.cookies.set('auth', accessToken, accessCookieOptions);
 

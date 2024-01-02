@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 type CookiePayload = {
   id: string;
   username: string;
+  fullName: string;
   exp: number;
   iat: number;
 };
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
 
   const response = NextResponse.json({ status: 200 });
 
-  const accessToken = await generateAccess({ id: user.id, username: user.username });
+  const accessToken = await generateAccess({ id: user.id, username: user.username, fullName: user.fullName });
 
   response.cookies.set('auth', accessToken, accessCookieOptions);
 

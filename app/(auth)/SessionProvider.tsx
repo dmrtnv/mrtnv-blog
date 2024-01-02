@@ -10,6 +10,7 @@ type SessionContexProps = {
     user: {
       id: string;
       username: string;
+      fullName: string;
     };
     expires: string;
   } | null;
@@ -23,6 +24,7 @@ type SessionInfo = {
     user: {
       id: string;
       username: string;
+      fullName: string;
     };
     expires: string;
   } | null;

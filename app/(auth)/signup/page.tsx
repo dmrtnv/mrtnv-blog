@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import axios from '@/lib/axios';
+import axios from 'axios';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useSession } from '../SessionProvider';
+
+const URL = process.env.URL || 'http://localhost:3000/';
 
 const formSchema = z
   .object({
@@ -34,6 +36,7 @@ const formSchema = z
           message: 'Username already taken',
         },
       ),
+    fullName: z.string().trim().min(1).max(120),
     password: z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,16}$/, {
       message: 'Password must consist of 4-16 letters and numbers',
     }),
@@ -55,6 +58,7 @@ function SignupPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
+      fullName: '',
       password: '',
       confirmPassword: '',
     },
@@ -63,10 +67,11 @@ function SignupPage() {
   async function onSubmit(values: Input) {
     setIsLoading(true);
 
-    const result = await axios.post('/api/signup', values);
+    console.log(URL);
+    const result = await axios.post(`${URL}/api/signup`, values);
+    console.log(result);
 
     form.reset();
-    console.log(result);
 
     setIsLoading(false);
 
@@ -95,6 +100,21 @@ function SignupPage() {
                     <Input placeholder='username' {...field} />
                   </FormControl>
                   <FormDescription>This is your username.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='fullName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Full Name' {...field} />
+                  </FormControl>
+                  <FormDescription>This is your full name.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

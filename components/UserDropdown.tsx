@@ -28,12 +28,14 @@ function UserDropdown() {
     }
   };
 
+  if (!user) return;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
-          <AvatarFallback>{user?.username[0]}</AvatarFallback>
+          <AvatarFallback>{user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='mx-1'>
