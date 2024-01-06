@@ -73,7 +73,7 @@ function SignupPage() {
 
     setIsLoading(false);
 
-    router.push('/');
+    router.push('/profile');
   }
 
   return (
