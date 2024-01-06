@@ -1,14 +1,13 @@
 'use client';
 
-import PostType from '@/types/PostType';
+import { PostType, PostArrayType } from '@/types/Post';
 import axios from '@/lib/axios';
 import React, { useContext, createContext, useState } from 'react';
-import PostsSchema from '@/types/PostsSchema';
-
-type NewPostType = { text: string };
+import { PostArraySchema } from '@/types/Post';
+import { NewPostType } from '@/types/NewPost';
 
 type PostsContextType = {
-  posts: PostType[] | null;
+  posts: PostArrayType | null;
   fetchPosts: () => Promise<void>;
   addPost: (post: NewPostType) => Promise<void>;
   toggleLike: (postId: number) => Promise<void>;
@@ -18,13 +17,13 @@ type PostsContextType = {
 const PostsContext = createContext<PostsContextType | null>(null);
 
 function PostsProvider({ children }: { children: React.ReactNode }) {
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [posts, setPosts] = useState<PostArrayType>([]);
 
   const fetchPosts = async () => {
     try {
       const result = await axios.get('/api/posts');
 
-      const posts = PostsSchema.parse(result.data.posts);
+      const posts = PostArraySchema.parse(result.data.posts);
       setPosts(posts);
     } catch (err) {
       console.error(err);
@@ -38,7 +37,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
       if (!result.data.posts) return;
 
-      setPosts(PostsSchema.parse(result.data.posts));
+      setPosts(PostArraySchema.parse(result.data.posts));
     } catch (err: unknown) {
       console.error(err);
     }

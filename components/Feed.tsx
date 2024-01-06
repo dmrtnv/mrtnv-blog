@@ -1,7 +1,7 @@
 import Post from './Post';
-import PostType from '@/types/PostType';
+import { PostArrayType } from '@/types/Post';
 
-function Feed({ posts }: { posts: PostType[] | null }) {
+function Feed({ posts }: { posts: PostArrayType | null }) {
   if (!posts) return <div>No posts</div>;
 
   return (

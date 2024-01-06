@@ -3,7 +3,7 @@
 import { MessageCircle } from 'lucide-react';
 import UserHoverCard from './UserHoverCard';
 import { Button } from './ui/button';
-import PostType from '@/types/PostType';
+import { PostType } from '@/types/Post';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import LikeButton from './ui/like-button';
