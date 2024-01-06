@@ -1,16 +1,7 @@
-'use client';
-
 import Post from './Post';
-import { useLayoutEffect } from 'react';
-import { usePostsContext } from '@/contexts/PostsProvider';
+import PostType from '@/types/PostType';
 
-function Feed() {
-  const { posts, fetchPosts } = usePostsContext();
-
-  useLayoutEffect(() => {
-    fetchPosts();
-  }, []);
-
+function Feed({ posts }: { posts: PostType[] | null }) {
   if (!posts) return <div>No posts</div>;
 
   return (
