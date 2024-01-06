@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import '@uploadthing/react/styles.css';
 import Header from '@/components/Header';
 import Providers from './Providers';
 import { ScrollArea } from '@/components/ui/scroll-area';
