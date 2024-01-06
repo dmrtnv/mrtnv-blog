@@ -1,8 +1,9 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
+import { UserType } from '@/types/User';
 
-function UserHoverCard({ user }: { user: { id: string; username: string; fullName: string } }) {
+function UserHoverCard({ user }: { user: UserType }) {
   return (
     <>
       <HoverCard>
@@ -42,13 +43,13 @@ function UserHoverCard({ user }: { user: { id: string; username: string; fullNam
               </div>
             </Link>
           </div>
-          <div className='mt-4'>
-            <p className='font-bold'>Bio</p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste error architecto eaque modi autem
-              voluptatibus.
-            </p>
-          </div>
+
+          {!!user.bio && (
+            <div className='mt-4'>
+              <p className='font-bold'>Bio</p>
+              <p>{user.bio}</p>
+            </div>
+          )}
         </HoverCardContent>
       </HoverCard>
     </>
