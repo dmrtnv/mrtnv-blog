@@ -15,7 +15,7 @@ model User {
   username          String    @unique
   fullName          String
   profilePictureUrl String?
-  bio               String?
+  bio               String?   @db.Text
   passwordHash      String
   posts             Post[]
   comments          Comment[]
