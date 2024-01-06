@@ -1,29 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAccess } from '@/lib/jwt';
 
-export async function middleware(req: NextRequest) {
-  const authToken = req.cookies.get('auth')?.value;
+type MethodType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-  if (!authToken) return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
+type RequestType = {
+  methods: MethodType[];
+  href: string;
+};
 
-  const data = await verifyAccess(authToken);
+const RequestsToAuthorize: RequestType[] = [
+  {
+    methods: ['GET'],
+    href: '/api/logout',
+  },
+  {
+    methods: ['POST', 'DELETE'],
+    href: '/api/posts',
+  },
+  {
+    methods: ['GET'],
+    href: '/api/me',
+  },
+  {
+    methods: ['DELETE', 'PUT'],
+    href: '/api/users',
+  },
+];
 
-  try {
-    if (!data) throw new Error('Token has no data');
-
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set('user-data', JSON.stringify({ id: data.id, username: data.username }));
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } catch (err: unknown) {
-    return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
-  }
+function verifyRequest(req: NextRequest) {
+  return RequestsToAuthorize.some(
+    (request) => req.nextUrl.href.includes(request.href) && request.methods.includes(req.method),
+  );
 }
 
-export const config = {
-  matcher: ['/api/logout', '/api/posts', '/api/posts/:id+', '/api/users/:username+', '/api/me'],
-};
+// const RequestsToAuthorize = ['/api/logout', '/api/posts', '/api/posts/:id+', '/api/users/:username+', '/api/me'];
+
+export async function middleware(req: NextRequest) {
+  if (verifyRequest(req)) {
+    const authToken = req.cookies.get('auth')?.value;
+
+    if (!authToken) return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
+
+    const data = await verifyAccess(authToken);
+
+    try {
+      if (!data) throw new Error('Token has no data');
+
+      const requestHeaders = new Headers(req.headers);
+      requestHeaders.set('user-data', JSON.stringify({ id: data.id, username: data.username }));
+
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+    } catch (err: unknown) {
+      return NextResponse.json({ session: { status: 'unauthenticated' } }, { status: 401 });
+    }
+  }
+}
