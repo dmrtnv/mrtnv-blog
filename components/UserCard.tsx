@@ -8,7 +8,7 @@ function UserCard({ user, totalPosts }: { user: UserType; totalPosts: number }) 
       <CardHeader>
         <div className='flex items-center gap-10'>
           <Avatar className='shadow-l h-40 w-40 self-start'>
-            <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
+            <AvatarImage src={user.profilePictureUrl ?? undefined} />
             <AvatarFallback>{user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}</AvatarFallback>
           </Avatar>
           <div className='flex flex-col gap-2'>

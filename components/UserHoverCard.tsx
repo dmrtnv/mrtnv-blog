@@ -11,7 +11,7 @@ function UserHoverCard({ user }: { user: UserType }) {
           <div className='flex items-center gap-4'>
             <Link href={`/${user.username}`}>
               <Avatar className='cursor-pointer'>
-                <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
+                <AvatarImage src={user.profilePictureUrl ?? undefined} />
                 <AvatarFallback>
                   {user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}
                 </AvatarFallback>
@@ -30,7 +30,7 @@ function UserHoverCard({ user }: { user: UserType }) {
           <div className='flex items-center gap-6'>
             <Link href={`/${user.username}`}>
               <Avatar className='h-16 w-16 cursor-pointer'>
-                <AvatarImage src='https://images.news18.com/ibnlive/uploads/2022/04/untitled-design-4.jpg' />
+                <AvatarImage src={user.profilePictureUrl ?? undefined} />
                 <AvatarFallback>
                   {user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}
                 </AvatarFallback>
