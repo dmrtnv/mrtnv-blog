@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Providers from './Providers';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,8 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          <Header />
-          <main className='container max-w-4xl px-0'>{children}</main>
+          <div className='flex h-screen w-full flex-col'>
+            <Header />
+            <ScrollArea className='flex-grow-1'>
+              <main className='container max-w-4xl px-0'>{children}</main>
+            </ScrollArea>
+          </div>
         </Providers>
       </body>
     </html>
