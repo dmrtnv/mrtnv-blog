@@ -23,6 +23,8 @@ export async function GET() {
             id: true,
             username: true,
             fullName: true,
+            bio: true,
+            profilePictureUrl: true,
           },
         },
         likes: {
@@ -80,6 +82,8 @@ export async function POST(req: NextRequest) {
             id: true,
             username: true,
             fullName: true,
+            bio: true,
+            profilePictureUrl: true,
           },
         },
         likes: {
