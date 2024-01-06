@@ -6,6 +6,8 @@ type PostType = {
     id: string;
     username: string;
     fullName: string;
+    bio?: string | null;
+    profilePictureUrl?: string | null;
   };
   likes: {
     id: number;
