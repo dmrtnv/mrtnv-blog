@@ -3,29 +3,7 @@
 import PostType from '@/types/PostType';
 import axios from '@/lib/axios';
 import React, { useContext, createContext, useState } from 'react';
-import { z } from 'zod';
-
-const PostSchema = z.array(
-  z.object({
-    text: z.string(),
-    id: z.number(),
-    createdAt: z.string().pipe(z.coerce.date()),
-    author: z.object({
-      id: z.string(),
-      username: z.string(),
-      fullName: z.string(),
-    }),
-    likes: z.array(
-      z.object({
-        id: z.number(),
-        user: z.object({
-          id: z.string(),
-          username: z.string(),
-        }),
-      }),
-    ),
-  }),
-);
+import PostsSchema from '@/types/PostsSchema';
 
 type NewPostType = { text: string };
 
@@ -34,6 +12,7 @@ type PostsContextType = {
   fetchPosts: () => Promise<void>;
   addPost: (post: NewPostType) => Promise<void>;
   toggleLike: (postId: number) => Promise<void>;
+  fetchPostsByUsername: (username: string) => Promise<void>;
 };
 
 const PostsContext = createContext<PostsContextType | null>(null);
@@ -45,7 +24,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
     try {
       const result = await axios.get('/api/posts');
 
-      const posts = PostSchema.parse(result.data.posts);
+      const posts = PostsSchema.parse(result.data.posts);
       setPosts(posts);
     } catch (err) {
       console.error(err);
@@ -53,11 +32,21 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const fetchPostsByUsername = async (username: string) => {
+    try {
+      const result = await axios.get(`/api/users/${username}/posts`);
+
+      if (!result.data.posts) return;
+
+      setPosts(PostsSchema.parse(result.data.posts));
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  };
+
   const addPost = async (post: NewPostType) => {
     try {
       const result = await axios.post('/api/posts', post);
-
-      console.log(result);
 
       const updatedPosts = [...(posts ?? []), result.data.post];
       setPosts(updatedPosts);
@@ -81,7 +70,11 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return <PostsContext.Provider value={{ posts, fetchPosts, addPost, toggleLike }}>{children}</PostsContext.Provider>;
+  return (
+    <PostsContext.Provider value={{ posts, fetchPosts, fetchPostsByUsername, addPost, toggleLike }}>
+      {children}
+    </PostsContext.Provider>
+  );
 }
 
 function usePostsContext() {
