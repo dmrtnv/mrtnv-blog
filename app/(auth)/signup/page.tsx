@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useSession } from '../SessionProvider';
 
 const URL = process.env.URL || 'http://localhost:3000/';
 
@@ -28,9 +27,9 @@ const formSchema = z
         async (username) => {
           if (!username) return true;
 
-          const { userExists } = (await axios.get(`/api/users/${username}`)).data;
+          const { user } = (await axios.get(`/api/users/${username}`)).data;
 
-          return !userExists;
+          return !user;
         },
         {
           message: 'Username already taken',
@@ -52,7 +51,6 @@ type Input = z.infer<typeof formSchema>;
 function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { updateSession } = useSession();
 
   const form = useForm<Input>({
     resolver: zodResolver(formSchema),
@@ -74,8 +72,6 @@ function SignupPage() {
     form.reset();
 
     setIsLoading(false);
-
-    updateSession();
 
     router.push('/');
   }

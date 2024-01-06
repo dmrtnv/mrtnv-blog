@@ -13,7 +13,6 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
-import { useSession } from '../SessionProvider';
 
 const URL = process.env.URL || 'http://localhost:3000/';
 
@@ -27,7 +26,6 @@ type Input = z.infer<typeof formSchema>;
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { updateSession } = useSession();
 
   const form = useForm<Input>({
     resolver: zodResolver(formSchema),
@@ -44,8 +42,6 @@ function LoginPage() {
       const result = await axios.post(`${URL}/api/login`, values);
 
       setIsLoading(false);
-
-      updateSession();
 
       router.push('/');
     } catch (err: unknown) {

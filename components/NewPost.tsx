@@ -8,7 +8,7 @@ import { Button } from './ui/button';
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
-import { useSession } from '@/app/(auth)/SessionProvider';
+import { useSession } from '@/contexts/SessionProvider';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { Input } from './ui/input';
@@ -19,7 +19,7 @@ const PostSchema = z.object({
 });
 
 function NewPost() {
-  const { status } = useSession();
+  const { user, isLoading: isUserLoading } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const { addPost } = usePostsContext();
@@ -31,9 +31,9 @@ function NewPost() {
     },
   });
 
-  if (status === 'loading') return;
+  if (isUserLoading) return;
 
-  if (status === 'unauthenticated') {
+  if (!user) {
     return (
       <Card className='my-2'>
         <CardHeader>

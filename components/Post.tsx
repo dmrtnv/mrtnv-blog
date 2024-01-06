@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import LikeButton from './ui/like-button';
 import { usePostsContext } from '@/contexts/PostsProvider';
-import { useSession } from '@/app/(auth)/SessionProvider';
+import { useSession } from '@/contexts/SessionProvider';
 dayjs.extend(relativeTime);
 
 function Post({ post }: { post: PostType }) {
