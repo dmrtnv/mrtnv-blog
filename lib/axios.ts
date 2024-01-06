@@ -34,7 +34,7 @@ export function getAxiosClientWithInterceptor(updateSession: (() => void) | null
 
           return axiosClient(prevRequest);
         } catch (err) {
-          console.error(err);
+          // console.error(err);
 
           if (router) {
             router.push('/login');

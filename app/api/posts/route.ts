@@ -46,7 +46,7 @@ export async function GET() {
 
     return NextResponse.json({ posts }, { status: 200 });
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     return NextResponse.json({ status: 500 });
   }
 }

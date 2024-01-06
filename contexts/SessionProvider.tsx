@@ -20,7 +20,7 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
 
       setUser(UserSchema.parse(result.data.user));
     } catch (err: unknown) {
-      console.error(err);
+      // console.error(err);
       setUser(null);
     }
   };

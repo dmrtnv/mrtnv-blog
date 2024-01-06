@@ -26,7 +26,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
       const posts = PostArraySchema.parse(result.data.posts);
       setPosts(posts);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       setPosts([]);
     }
   };
@@ -39,7 +39,8 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
       setPosts(PostArraySchema.parse(result.data.posts));
     } catch (err: unknown) {
-      console.error(err);
+      // console.error(err);
+      setPosts([]);
     }
   };
 
@@ -50,7 +51,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
       const updatedPosts = [...(posts ?? []), result.data.post];
       setPosts(updatedPosts);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -65,7 +66,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
       setPosts(updatedPosts);
     } catch (err: unknown) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
