@@ -64,7 +64,7 @@ function UserPage({ params }: { params: { username: string } }) {
     <>
       <UserCard user={user} totalPosts={posts?.length ?? 0} />
 
-      <NewPost />
+      {sessionUser.username === user.username && <NewPost />}
 
       {!!posts && <Feed posts={posts} />}
     </>
