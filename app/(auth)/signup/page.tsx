@@ -65,15 +65,16 @@ function SignupPage() {
   async function onSubmit(values: Input) {
     setIsLoading(true);
 
-    console.log(URL);
-    const result = await axios.post(`${URL}/api/signup`, values);
-    console.log(result);
-
-    form.reset();
+    try {
+      const result = await axios.post(`${URL}/api/signup`, values);
+      console.log(result);
+      form.reset();
+      router.push('/profile');
+    } catch (err) {
+      console.error(err);
+    }
 
     setIsLoading(false);
-
-    router.push('/profile');
   }
 
   return (
