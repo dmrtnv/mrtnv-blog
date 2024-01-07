@@ -8,6 +8,7 @@ import z from 'zod';
 import { Loader2 } from 'lucide-react';
 import PictureProfileForm from '@/components/PictureProfileForm';
 import { useRouter } from 'next/navigation';
+import CallToSignIn from '@/components/CallToSignIn';
 
 function ProfilePage() {
   const { user, isLoading } = useSession();
@@ -15,10 +16,7 @@ function ProfilePage() {
 
   if (isLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
 
-  if (!user) {
-    // router.push('/login');
-    return;
-  }
+  if (!user) return <CallToSignIn />;
 
   return (
     <Card className='my-2'>

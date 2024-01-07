@@ -33,20 +33,7 @@ function NewPost() {
 
   if (isUserLoading) return;
 
-  if (!user) {
-    return (
-      <Card className='my-2'>
-        <CardHeader>
-          <CardTitle>
-            <Link href='/login' className='mr-2 text-sky-600 hover:underline'>
-              Log In
-            </Link>
-            <span>to Create New Post!</span>
-          </CardTitle>
-        </CardHeader>
-      </Card>
-    );
-  }
+  if (!user) return;
 
   const onSubmit = async (post: z.infer<typeof PostSchema>) => {
     setIsLoading(true);

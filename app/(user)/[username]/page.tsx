@@ -10,12 +10,16 @@ import { useEffect, useState } from 'react';
 import UserCard from '@/components/UserCard';
 import Link from 'next/link';
 import NewPost from '@/components/NewPost';
+import { useSession } from '@/contexts/SessionProvider';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import CallToSignIn from '@/components/CallToSignIn';
 
 function UserPage({ params }: { params: { username: string } }) {
   const [user, setUser] = useState<UserType | null>(null);
   const { fetchPostsByUsername, posts } = usePostsContext();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const { user: sessionUser, isLoading: isSessionUserLoading } = useSession();
 
   useEffect(() => {
     setIsLoading(true);
@@ -42,11 +46,19 @@ function UserPage({ params }: { params: { username: string } }) {
     })();
   }, [user]);
 
-  if (isLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
+  if (isLoading || isSessionUserLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
 
   if (!user) {
-    return <Link href='/login'>Log In</Link>;
+    return (
+      <Card className='my-2'>
+        <CardHeader>
+          <CardTitle>{`User with username ${params.username} does not exist. 404`}</CardTitle>
+        </CardHeader>
+      </Card>
+    );
   }
+
+  if (!sessionUser) return <CallToSignIn />;
 
   return (
     <>
