@@ -2,7 +2,7 @@ import api from '@/lib/api';
 import { NewPostType } from '@/types/NewPost';
 import { PostArraySchema, PostSchema } from '@/types/Post';
 
-const fetchPosts = async () => {
+export async function fetchPosts() {
   try {
     const result = await api.get('/posts');
 
@@ -13,18 +13,18 @@ const fetchPosts = async () => {
     // console.error(err);
     return [];
   }
-};
+}
 
-const fetchPostById = async (postId: string | number) => {
+export async function fetchPostById(postId: string | number) {
   try {
     const result = await api.get(`/posts/${postId}`);
     return PostSchema.parse(result.data.post);
   } catch (err) {
     return null;
   }
-};
+}
 
-const fetchPostsByUsername = async (username: string) => {
+export async function fetchPostsByUsername(username: string) {
   try {
     const result = await api.get(`/users/${username}/posts`);
 
@@ -33,9 +33,9 @@ const fetchPostsByUsername = async (username: string) => {
     // console.error(err);
     return [];
   }
-};
+}
 
-const addPost = async (post: NewPostType) => {
+export async function addPost(post: NewPostType) {
   try {
     const result = await api.post('/posts', post);
 
@@ -43,9 +43,9 @@ const addPost = async (post: NewPostType) => {
   } catch (err) {
     // console.error(err);
   }
-};
+}
 
-const toggleLike = async (postId: number) => {
+export async function toggleLike(postId: number) {
   try {
     const result = await api.post(`/posts/${postId}/likes`);
 
@@ -53,6 +53,4 @@ const toggleLike = async (postId: number) => {
   } catch (err: unknown) {
     // console.error(err);
   }
-};
-
-export { fetchPosts, fetchPostById, fetchPostsByUsername, addPost, toggleLike };
+}
