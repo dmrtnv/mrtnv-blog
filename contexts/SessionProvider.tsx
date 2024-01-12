@@ -1,7 +1,7 @@
 'use client';
 
 import { UserType, UserSchema } from '@/types/User';
-import axios from '@/lib/axios';
+import api from '@/lib/api';
 import { useContext, createContext, useState, useEffect } from 'react';
 
 type SessionContextType = {
@@ -16,7 +16,7 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
 
   const getUser = async () => {
     try {
-      const result = await axios.get('/api/me');
+      const result = await api.get('/me');
 
       setUser(UserSchema.parse(result.data.user));
     } catch (err: unknown) {

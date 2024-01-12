@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useSession } from '@/contexts/SessionProvider';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import axios from '@/lib/axios';
+import api from '@/lib/api';
 
 function UserDropdown() {
   const { user } = useSession();
@@ -19,7 +19,7 @@ function UserDropdown() {
 
   const handleLogout = async () => {
     try {
-      const result = await axios.get('/api/logout');
+      const result = await api.get('/logout');
 
       router.push('/');
     } catch (err: unknown) {

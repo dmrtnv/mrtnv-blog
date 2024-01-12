@@ -1,7 +1,7 @@
 'use client';
 
 import { PostType, PostArrayType } from '@/types/Post';
-import axios from '@/lib/axios';
+import api from '@/lib/api';
 import React, { useContext, createContext, useState } from 'react';
 import { PostArraySchema } from '@/types/Post';
 import { NewPostType } from '@/types/NewPost';
@@ -21,7 +21,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
   const fetchPosts = async () => {
     try {
-      const result = await axios.get('/api/posts');
+      const result = await api.get('/posts');
 
       const posts = PostArraySchema.parse(result.data.posts);
       setPosts(posts);
@@ -33,7 +33,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
   const fetchPostsByUsername = async (username: string) => {
     try {
-      const result = await axios.get(`/api/users/${username}/posts`);
+      const result = await api.get(`/users/${username}/posts`);
 
       if (!result.data.posts) return;
 
@@ -46,7 +46,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
   const addPost = async (post: NewPostType) => {
     try {
-      const result = await axios.post('/api/posts', post);
+      const result = await api.post('/posts', post);
 
       const updatedPosts = [...(posts ?? []), result.data.post];
       setPosts(updatedPosts);
@@ -57,7 +57,7 @@ function PostsProvider({ children }: { children: React.ReactNode }) {
 
   const toggleLike = async (postId: number) => {
     try {
-      const result = await axios.post(`/api/posts/${postId}/likes`);
+      const result = await api.post(`/posts/${postId}/likes`);
 
       const newLikes = result.data.likes;
       const post = posts.find((post) => post.id === postId) as PostType;

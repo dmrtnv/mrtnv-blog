@@ -8,7 +8,7 @@ import z from 'zod';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Check, Loader2 } from 'lucide-react';
-import axios from '@/lib/axios';
+import api from '@/lib/api';
 import { UserSchema } from '@/types/User';
 import { useSession } from '@/contexts/SessionProvider';
 
@@ -33,7 +33,7 @@ function BioForm() {
     if (!user) return;
 
     try {
-      const result = await axios.put(`/api/users/${user.username}`, { bio: values.bio });
+      const result = await api.put(`/users/${user.username}`, { bio: values.bio });
       const updatedUser = UserSchema.parse(result.data.user);
       form.reset({ bio: updatedUser.bio ?? '' });
     } catch (err: unknown) {

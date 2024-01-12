@@ -2,7 +2,7 @@
 
 import Feed from '@/components/Feed';
 import { usePostsContext } from '@/contexts/PostsProvider';
-import axios from '@/lib/axios';
+import api from '@/lib/api';
 import { UserSchema, UserType } from '@/types/User';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -25,7 +25,7 @@ function UserPage({ params }: { params: { username: string } }) {
     setIsLoading(true);
 
     (async () => {
-      const result = await axios.get(`/api/users/${params.username}`);
+      const result = await api.get(`/users/${params.username}`);
 
       if (!result.data.user) {
         // router.back();
