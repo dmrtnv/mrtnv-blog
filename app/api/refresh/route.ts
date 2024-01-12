@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyRefresh, generateAccess, accessCookieOptions } from '@/lib/jwt';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 
 type CookiePayload = {
   id: string;
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   const cookiePayload = (await verifyRefresh(refreshCookie?.value)) as CookiePayload;
 
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id: cookiePayload.id,
     },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import { Prisma } from '@prisma/client';
 import z from 'zod';
 
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const postId = url.slice(url.lastIndexOf('/') + 1);
 
   try {
-    const post = await prisma.post.findFirst({
+    const post = await db.post.findFirst({
       where: { id: +postId },
       select: {
         id: true,
@@ -58,7 +58,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const user = UserSchema.parse(userData);
 
-    const post = await prisma.post.delete({ where: { id: +postId, authorId: user.id } });
+    const post = await db.post.delete({ where: { id: +postId, authorId: user.id } });
 
     return NextResponse.json({ post }, { status: 200 });
   } catch (err: unknown) {

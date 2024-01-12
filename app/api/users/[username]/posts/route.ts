@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 
 export async function GET(req: NextRequest) {
   let url = req.nextUrl.href;
@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const username = url.slice(url.lastIndexOf('/') + 1);
 
   try {
-    const posts = await prisma.post.findMany({
+    const posts = await db.post.findMany({
       where: {
         author: {
           username,

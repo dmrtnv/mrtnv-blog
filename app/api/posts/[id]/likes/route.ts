@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import z from 'zod';
 
 const UserSchema = z.object({
@@ -16,16 +16,16 @@ export async function POST(req: NextRequest) {
   try {
     const user = UserSchema.parse(userData);
 
-    const post = await prisma.post.findFirst({ where: { id: +postId } });
+    const post = await db.post.findFirst({ where: { id: +postId } });
     if (!post) return NextResponse.json({ message: 'Post not found' }, { status: 404 });
 
-    const existingLike = await prisma.like.findFirst({ where: { postId: post.id, userId: user.id } });
+    const existingLike = await db.like.findFirst({ where: { postId: post.id, userId: user.id } });
 
     if (existingLike) {
       // unlike
-      await prisma.like.delete({ where: { id: existingLike.id } });
+      await db.like.delete({ where: { id: existingLike.id } });
 
-      const likes = await prisma.like.findMany({
+      const likes = await db.like.findMany({
         where: { postId: post.id },
         select: {
           id: true,
@@ -41,14 +41,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ likes }, { status: 200 });
     } else {
       // like
-      await prisma.like.create({
+      await db.like.create({
         data: {
           postId: post.id,
           userId: user.id,
         },
       });
 
-      const likes = await prisma.like.findMany({
+      const likes = await db.like.findMany({
         where: { postId: post.id },
         select: {
           id: true,
@@ -74,10 +74,10 @@ export async function GET(req: NextRequest) {
   const postId = url.slice(url.lastIndexOf('/') + 1);
 
   try {
-    const post = await prisma.post.findFirst({ where: { id: +postId } });
+    const post = await db.post.findFirst({ where: { id: +postId } });
     if (!post) return NextResponse.json({ message: 'Post not found' }, { status: 404 });
 
-    const likes = await prisma.like.findMany({
+    const likes = await db.like.findMany({
       where: { postId: +postId },
       select: {
         id: true,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 
 const PostSchema = z.object({
   text: z.string(),
@@ -13,7 +13,7 @@ const UserSchema = z.object({
 
 export async function GET() {
   try {
-    const posts = await prisma.post.findMany({
+    const posts = await db.post.findMany({
       select: {
         id: true,
         text: true,
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const post = PostSchema.parse(postData);
     const user = UserSchema.parse(userData);
 
-    const createdPost = await prisma.post.create({
+    const createdPost = await db.post.create({
       data: {
         text: post.text,
         author: {
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const newPost = await prisma.post.findFirst({
+    const newPost = await db.post.findFirst({
       where: { id: createdPost.id },
       select: {
         id: true,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import z from 'zod';
 
 const UpdateFieldSchema = z.object({
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const username = url.slice(url.lastIndexOf('/') + 1);
 
   try {
-    const user = await prisma.user.findFirst({
+    const user = await db.user.findFirst({
       where: {
         username,
       },
@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest) {
   try {
     const newFields = UpdateFieldSchema.parse(data);
 
-    const user = await prisma.user.update({
+    const user = await db.user.update({
       where: { username },
       data: {
         ...newFields,

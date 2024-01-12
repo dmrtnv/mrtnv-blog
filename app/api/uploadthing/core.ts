@@ -1,7 +1,7 @@
 import { verifyAccess } from '@/lib/jwt';
 import { UserCookieType } from '@/types/UserCookie';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import { UTApi } from 'uploadthing/server';
 
 export const utapi = new UTApi();
@@ -26,12 +26,12 @@ export const ourFileRouter = {
       const userIdentifiers = metadata.user;
 
       try {
-        const { profilePictureUrl: oldProfilePictureUrl } = (await prisma.user.findFirst({
+        const { profilePictureUrl: oldProfilePictureUrl } = (await db.user.findFirst({
           where: { id: userIdentifiers.id },
           select: { profilePictureUrl: true },
         })) ?? { profilePictureUrl: null };
 
-        const user = await prisma.user.update({
+        const user = await db.user.update({
           where: { id: userIdentifiers.id },
           data: {
             profilePictureUrl: file.url,

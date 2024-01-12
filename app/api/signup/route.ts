@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import { accessCookieOptions, generateTokens, refreshCookieOptions } from '@/lib/jwt';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ const HASH_SALT = 10;
 export async function POST(request: Request) {
   const { username, fullName, password }: RequestObj = await request.json();
 
-  const usernameTaken = await prisma.user.count({
+  const usernameTaken = await db.user.count({
     where: {
       username,
     },
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const passwordHash = await bcrypt.hash(password, HASH_SALT);
     if (!passwordHash) throw new Error('Failed password hashing');
 
-    const user = await prisma.user.create({
+    const user = await db.user.create({
       data: {
         username,
         fullName,

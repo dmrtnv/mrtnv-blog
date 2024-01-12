@@ -1,5 +1,5 @@
 import { UserCookieSchema } from '@/types/UserCookie';
-import prisma from '@/lib/prisma';
+import db from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   try {
     const userIdentifiers = UserCookieSchema.parse(userData);
 
-    const user = await prisma.user.findFirst({
+    const user = await db.user.findFirst({
       where: { id: userIdentifiers.id },
       select: {
         id: true,
