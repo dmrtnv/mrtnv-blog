@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../../lib/prisma';
+import db from '../../../lib/db';
 import bcrypt from 'bcrypt';
 import { generateTokens, accessCookieOptions, refreshCookieOptions } from '@/lib/jwt';
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
 
-  const user = await prisma.user.findFirst({
+  const user = await db.user.findFirst({
     where: {
       username,
     },
