@@ -7,13 +7,15 @@ import { PostType } from '@/types/Post';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import LikeButton from './ui/like-button';
-import { usePostsContext } from '@/contexts/PostsProvider';
 import { useSession } from '@/contexts/SessionProvider';
 import Link from 'next/link';
+import { useMutation, useQueryClient } from 'react-query';
+import { toggleLike } from '@/api/posts';
 dayjs.extend(relativeTime);
 
-function Post({ post, linkable = false }: { post: PostType; linkable: boolean }) {
-  const { toggleLike } = usePostsContext();
+function Post({ post, linkable = false }: { post: PostType; linkable?: boolean }) {
+  const queryClient = useQueryClient();
+  const toggleLikeMutation = useMutation(toggleLike, { onSuccess: () => queryClient.invalidateQueries('posts') });
   const { user } = useSession();
 
   if (!user) return null;
@@ -38,7 +40,7 @@ function Post({ post, linkable = false }: { post: PostType; linkable: boolean })
         <LikeButton
           likes={post.likes}
           isActive={post.likes.some((like) => like.user.id === user.id)}
-          handleClick={() => toggleLike(post.id)}
+          handleClick={() => toggleLikeMutation.mutate(post.id)}
         />
         <Button variant='ghost' className='h-11 w-11 rounded-full p-0'>
           <MessageCircle />

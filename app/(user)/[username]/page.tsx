@@ -1,23 +1,21 @@
 'use client';
 
 import Feed from '@/components/Feed';
-import { usePostsContext } from '@/contexts/PostsProvider';
 import api from '@/lib/api';
 import { UserSchema, UserType } from '@/types/User';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import UserCard from '@/components/UserCard';
-import Link from 'next/link';
 import NewPost from '@/components/NewPost';
 import { useSession } from '@/contexts/SessionProvider';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import CallToSignIn from '@/components/CallToSignIn';
+import { useQuery } from 'react-query';
+import { fetchPostsByUsername } from '@/api/posts';
 
 function UserPage({ params }: { params: { username: string } }) {
   const [user, setUser] = useState<UserType | null>(null);
-  const { fetchPostsByUsername, posts } = usePostsContext();
-  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(true);
   const { user: sessionUser, isLoading: isSessionUserLoading } = useSession();
 
@@ -37,14 +35,15 @@ function UserPage({ params }: { params: { username: string } }) {
     })();
   }, [params.username]);
 
-  useEffect(() => {
-    if (!user) return;
-
-    (async () => {
-      await fetchPostsByUsername(user.username);
-      setIsLoading(false);
-    })();
-  }, [user]);
+  const { data: posts } = useQuery(
+    ['posts', { username: user?.username }],
+    () => fetchPostsByUsername(user?.username ?? ''),
+    {
+      onSettled: () => {
+        setIsLoading(false);
+      },
+    },
+  );
 
   if (isLoading || isSessionUserLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
 

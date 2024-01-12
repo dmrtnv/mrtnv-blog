@@ -12,7 +12,8 @@ import { useSession } from '@/contexts/SessionProvider';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { Input } from './ui/input';
-import { usePostsContext } from '@/contexts/PostsProvider';
+import { useQueryClient, useMutation } from 'react-query';
+import { addPost } from '@/api/posts';
 
 const PostSchema = z.object({
   text: z.string().trim().min(1).max(280),
@@ -20,9 +21,13 @@ const PostSchema = z.object({
 
 function NewPost() {
   const { user, isLoading: isUserLoading } = useSession();
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { addPost } = usePostsContext();
+  const addPostMutation = useMutation(addPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    },
+  });
 
   const form = useForm<z.infer<typeof PostSchema>>({
     resolver: zodResolver(PostSchema),
@@ -36,13 +41,9 @@ function NewPost() {
   if (!user) return;
 
   const onSubmit = async (post: z.infer<typeof PostSchema>) => {
-    setIsLoading(true);
-
-    addPost(post);
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    addPostMutation.mutate(post);
 
     form.setValue('text', '');
-    setIsLoading(false);
   };
 
   return (
@@ -69,7 +70,7 @@ function NewPost() {
               />
             </div>
             <div className='border-white-100 flex w-[67px] items-end justify-center'>
-              {isLoading ? <Loader2 className='animate-spin' /> : <Button type='submit'>Post!</Button>}
+              {addPostMutation.isLoading ? <Loader2 className='animate-spin' /> : <Button type='submit'>Post!</Button>}
             </div>
           </form>
         </Form>
