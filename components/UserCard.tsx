@@ -4,7 +4,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 
 function UserCard({ user, totalPosts }: { user: UserType; totalPosts: number }) {
   return (
-    <Card className='my-2'>
+    <Card>
       <CardHeader>
         <div className='flex items-center gap-10'>
           <Avatar className='shadow-l h-40 w-40 self-start'>

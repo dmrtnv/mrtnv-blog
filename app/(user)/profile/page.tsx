@@ -16,7 +16,7 @@ function ProfilePage() {
   if (!user) return <CallToSignIn />;
 
   return (
-    <Card className='my-2'>
+    <Card>
       <CardHeader>
         <CardTitle>Manage Profile</CardTitle>
         <CardDescription>

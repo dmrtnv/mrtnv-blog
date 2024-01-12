@@ -46,7 +46,7 @@ function NewPost() {
   };
 
   return (
-    <Card className='my-2'>
+    <Card>
       <CardHeader>
         <CardTitle>Create New Post</CardTitle>
       </CardHeader>
