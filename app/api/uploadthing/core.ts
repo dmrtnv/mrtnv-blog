@@ -2,6 +2,9 @@ import { verifyAccess } from '@/lib/jwt';
 import { UserCookieType } from '@/types/UserCookie';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import prisma from '@/lib/prisma';
+import { UTApi } from 'uploadthing/server';
+
+export const utapi = new UTApi();
 
 const f = createUploadthing();
 
@@ -23,12 +26,21 @@ export const ourFileRouter = {
       const userIdentifiers = metadata.user;
 
       try {
+        const { profilePictureUrl: oldProfilePictureUrl } = (await prisma.user.findFirst({
+          where: { id: userIdentifiers.id },
+          select: { profilePictureUrl: true },
+        })) ?? { profilePictureUrl: null };
+
         const user = await prisma.user.update({
           where: { id: userIdentifiers.id },
           data: {
             profilePictureUrl: file.url,
           },
         });
+
+        if (oldProfilePictureUrl) {
+          await utapi.deleteFiles(oldProfilePictureUrl.slice(oldProfilePictureUrl.lastIndexOf('/') + 1));
+        }
 
         return { user };
       } catch (err: unknown) {
