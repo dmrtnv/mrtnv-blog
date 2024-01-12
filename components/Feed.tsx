@@ -8,7 +8,7 @@ function Feed({ posts }: { posts: PostArrayType | null }) {
     <ul className='flex list-none flex-col items-center gap-2'>
       {posts.toReversed().map((post) => (
         <li className='w-full' key={post.id}>
-          <Post post={post} />
+          <Post linkable post={post} />
         </li>
       ))}
     </ul>

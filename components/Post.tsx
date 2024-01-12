@@ -9,9 +9,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import LikeButton from './ui/like-button';
 import { usePostsContext } from '@/contexts/PostsProvider';
 import { useSession } from '@/contexts/SessionProvider';
+import Link from 'next/link';
 dayjs.extend(relativeTime);
 
-function Post({ post }: { post: PostType }) {
+function Post({ post, linkable = false }: { post: PostType; linkable: boolean }) {
   const { toggleLike } = usePostsContext();
   const { user } = useSession();
 
@@ -24,7 +25,15 @@ function Post({ post }: { post: PostType }) {
         <span>·</span>
         <span className='cursor-pointer text-sm'>{dayjs(post.createdAt).fromNow()}</span>
       </div>
-      <div className='my-2'>{post.text}</div>
+
+      {linkable ? (
+        <Link href={`/posts/${post.id}`}>
+          <div className='my-2'>{post.text}</div>
+        </Link>
+      ) : (
+        <div className='my-2'>{post.text}</div>
+      )}
+
       <div className='flex items-center gap-6'>
         <LikeButton
           likes={post.likes}
