@@ -8,6 +8,48 @@ const UserSchema = z.object({
   username: z.string(),
 });
 
+export async function GET(req: NextRequest) {
+  const url = req.nextUrl.href;
+  const postId = url.slice(url.lastIndexOf('/') + 1);
+
+  try {
+    const post = await prisma.post.findFirst({
+      where: { id: +postId },
+      select: {
+        id: true,
+        text: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            fullName: true,
+            bio: true,
+            profilePictureUrl: true,
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!post) return NextResponse.json({ message: 'No such post' }, { status: 404 });
+
+    return NextResponse.json({ post }, { status: 200 });
+  } catch (err: unknown) {
+    return NextResponse.json({ err }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   const url = req.nextUrl.href;
   const postId = url.slice(url.lastIndexOf('/') + 1);
