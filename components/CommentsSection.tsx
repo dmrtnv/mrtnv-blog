@@ -4,8 +4,8 @@ import Comment from './Comment';
 
 function CommentsSection({ comments }: { comments: CommentType[] }) {
   return (
-    <ul>
-      {comments.map((comment) => (
+    <ul className='flex flex-col gap-2'>
+      {comments.toReversed().map((comment) => (
         <li key={comment.id}>
           <Comment comment={comment} />
         </li>
