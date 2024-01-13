@@ -54,3 +54,12 @@ export async function toggleLike(postId: number) {
     // console.error(err);
   }
 }
+
+export async function deletePost(postId: number) {
+  try {
+    const result = await api.delete(`/posts/${postId}`);
+    console.log(result);
+  } catch (err) {
+    // console.error(err);
+  }
+}
