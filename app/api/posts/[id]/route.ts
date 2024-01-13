@@ -57,8 +57,16 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const user = UserSchema.parse(userData);
+    const post = await db.post.findFirst({ where: { id: +postId } });
 
-    const post = await db.post.delete({ where: { id: +postId, authorId: user.id } });
+    if (!post) return NextResponse.json({ message: 'Post does not exist' }, { status: 404 });
+    if (post.authorId !== user.id) {
+      return NextResponse.json({ message: 'User is allowed to delete own posts only' }, { status: 403 });
+    }
+
+    await db.like.deleteMany({ where: { postId: +postId } });
+    await db.comment.deleteMany({ where: { postId: +postId } });
+    await db.post.delete({ where: { id: +postId, authorId: user.id } });
 
     return NextResponse.json({ post }, { status: 200 });
   } catch (err: unknown) {
