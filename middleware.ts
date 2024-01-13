@@ -25,11 +25,15 @@ const RequestsToAuthorize: RequestType[] = [
     methods: ['DELETE', 'PUT'],
     href: '/api/users',
   },
+  {
+    methods: ['POST'],
+    href: '/api/comments',
+  },
 ];
 
 function verifyRequest(req: NextRequest) {
   return RequestsToAuthorize.some(
-    (request) => req.nextUrl.href.includes(request.href) && request.methods.includes(req.method),
+    (request) => req.nextUrl.href.includes(request.href) && request.methods.includes(req.method as MethodType),
   );
 }
 
