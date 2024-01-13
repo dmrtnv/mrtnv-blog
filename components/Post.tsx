@@ -42,8 +42,11 @@ function Post({ post, linkable = false }: { post: PostType; linkable?: boolean }
           isActive={post.likes.some((like) => like.user.id === user.id)}
           handleClick={() => toggleLikeMutation.mutate(post.id)}
         />
+
         <Button variant='ghost' className='h-11 w-11 rounded-full p-0'>
-          <MessageCircle />
+          <Link href={`/posts/${post.id}/#comments`}>
+            <MessageCircle />
+          </Link>
         </Button>
       </div>
     </article>
