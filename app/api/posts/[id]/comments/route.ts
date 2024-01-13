@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
       select: {
         id: true,
         text: true,
+        createdAt: true,
         author: {
           select: {
             id: true,
@@ -22,6 +23,9 @@ export async function GET(req: NextRequest) {
           },
         },
         postId: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
       },
     });
 
