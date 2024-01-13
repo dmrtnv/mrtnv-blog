@@ -47,7 +47,10 @@ function UserDropdown() {
         <DropdownMenuItem className='hover:cursor-pointer' asChild>
           <Link href={`/profile`}>Manage account</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleLogout} className='hover:cursor-pointer'>
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className='text-destructive hover:cursor-pointer focus:bg-destructive-foreground focus:text-destructive'
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
