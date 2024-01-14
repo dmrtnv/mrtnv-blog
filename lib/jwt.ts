@@ -38,7 +38,7 @@ export async function generateAccess(payload: any) {
 
   const accessToken = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime(JWT_ACCESS_MAX_AGE)
+    .setExpirationTime('30m')
     .sign(ACCESS_SECRET);
 
   return accessToken;
@@ -51,7 +51,7 @@ export async function generateRefresh(payload: any) {
 
   const refreshToken = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime(JWT_REFRESH_MAX_AGE)
+    .setExpirationTime('1d')
     .sign(REFRESH_SECRET);
 
   return refreshToken;
