@@ -11,25 +11,26 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(cuid())
-  username          String    @unique
-  fullName          String
-  profilePictureUrl String?
-  bio               String?   @db.Text
-  passwordHash      String
-  posts             Post[]
-  comments          Comment[]
-  likes             Like[]
+  id             String          @id @default(cuid())
+  username       String          @unique
+  fullName       String
+  bio            String?         @db.Text
+  passwordHash   String
+  posts          Post[]
+  comments       Comment[]
+  likes          Like[]
+  profilePicture ProfilePicture?
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  text      String    @db.Text
-  author    User      @relation(fields: [authorId], references: [id])
+  id        Int         @id @default(autoincrement())
+  text      String      @db.Text
+  author    User        @relation(fields: [authorId], references: [id])
   authorId  String
-  createdAt DateTime  @default(now())
+  createdAt DateTime    @default(now())
   likes     Like[]
   comments  Comment[]
+  media     PostImage[]
 }
 
 model Comment {
@@ -48,4 +49,32 @@ model Like {
   postId Int
   user   User   @relation(fields: [userId], references: [id])
   userId String
+}
+
+model ProfilePicture {
+  id          Int    @id @default(autoincrement())
+  fileKey     String
+  height      Int
+  width       Int
+  src         String
+  blurDataUrl String
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String @unique
+}
+
+// enum MediaType {
+//   VIDEO
+//   IMAGE
+// }
+
+model PostImage {
+  id          Int    @id @default(autoincrement())
+  fileKey     String
+  height      Int
+  width       Int
+  src         String
+  blurDataUrl String
+  post        Post   @relation(fields: [postId], references: [id])
+  postId      Int
+  // type   MediaType
 }

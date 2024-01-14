@@ -9,7 +9,16 @@ export const PostSchema = z.object({
     username: z.string(),
     fullName: z.string(),
     bio: z.string().nullable().optional(),
-    profilePictureUrl: z.string().url().nullable().optional(),
+    profilePicture: z
+      .object({
+        id: z.number(),
+        src: z.string(),
+        width: z.number(),
+        height: z.number(),
+        blurDataUrl: z.string(),
+      })
+      .optional()
+      .nullable(),
   }),
   likes: z.array(
     z.object({
