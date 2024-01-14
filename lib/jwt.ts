@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as jose from 'jose';
 
-const JWT_ACCESS_MAX_AGE = 300;
+const JWT_ACCESS_MAX_AGE = 1800;
 const JWT_REFRESH_MAX_AGE = 86400;
 
 const ACCESS_SECRET = new TextEncoder().encode(process.env.JWT_ACCESS_SECRET);
@@ -38,7 +38,7 @@ export async function generateAccess(payload: any) {
 
   const accessToken = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('5m')
+    .setExpirationTime(JWT_ACCESS_MAX_AGE)
     .sign(ACCESS_SECRET);
 
   return accessToken;
@@ -51,7 +51,7 @@ export async function generateRefresh(payload: any) {
 
   const refreshToken = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('1d')
+    .setExpirationTime(JWT_REFRESH_MAX_AGE)
     .sign(REFRESH_SECRET);
 
   return refreshToken;
