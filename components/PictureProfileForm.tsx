@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 function PictureProfileForm() {
-  const { user } = useSession();
+  const { user, updateSession } = useSession();
 
   if (!user) return;
 
@@ -21,6 +21,7 @@ function PictureProfileForm() {
             endpoint='profilePictureUploader'
             onClientUploadComplete={(res) => {
               console.log(res);
+              updateSession();
             }}
           />
         </Label>

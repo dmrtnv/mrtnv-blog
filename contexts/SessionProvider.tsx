@@ -40,15 +40,17 @@ function useSession() {
   const { user, getUser } = useSessionContext();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const updateSession = () => {
     (async () => {
       setIsLoading(true);
       await getUser();
       setIsLoading(false);
     })();
-  }, []);
+  };
 
-  return { user, isLoading };
+  useEffect(updateSession, []);
+
+  return { user, isLoading, updateSession };
 }
 
 export { SessionProvider, useSession };
