@@ -4,7 +4,6 @@ import z from 'zod';
 
 const UpdateFieldSchema = z.object({
   bio: z.string().optional(),
-  profilePictureUrl: z.string().url().optional(),
 });
 
 export async function GET(request: Request) {
@@ -21,7 +20,15 @@ export async function GET(request: Request) {
         username: true,
         fullName: true,
         bio: true,
-        profilePictureUrl: true,
+        profilePicture: {
+          select: {
+            id: true,
+            height: true,
+            width: true,
+            src: true,
+            blurDataUrl: true,
+          },
+        },
       },
     });
 
@@ -50,7 +57,15 @@ export async function PUT(req: NextRequest) {
         username: true,
         fullName: true,
         bio: true,
-        profilePictureUrl: true,
+        profilePicture: {
+          select: {
+            id: true,
+            height: true,
+            width: true,
+            src: true,
+            blurDataUrl: true,
+          },
+        },
       },
     });
 

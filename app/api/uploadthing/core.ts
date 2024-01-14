@@ -3,6 +3,7 @@ import { UserCookieType } from '@/types/UserCookie';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import db from '@/lib/db';
 import { UTApi } from 'uploadthing/server';
+import lqip from 'lqip-modern';
 
 export const utapi = new UTApi();
 
@@ -26,23 +27,28 @@ export const ourFileRouter = {
       const userIdentifiers = metadata.user;
 
       try {
-        const { profilePictureUrl: oldProfilePictureUrl } = (await db.user.findFirst({
-          where: { id: userIdentifiers.id },
-          select: { profilePictureUrl: true },
-        })) ?? { profilePictureUrl: null };
+        const parsedImage = await parseImage(file.url);
 
-        const user = await db.user.update({
-          where: { id: userIdentifiers.id },
-          data: {
-            profilePictureUrl: file.url,
+        const oldProfilePicture = await db.profilePicture.findFirst({ where: { userId: userIdentifiers.id } });
+
+        const newProfilePicture = await db.profilePicture.upsert({
+          where: { userId: userIdentifiers.id },
+          update: {
+            fileKey: file.key,
+            ...parsedImage,
+          },
+          create: {
+            userId: userIdentifiers.id,
+            fileKey: file.key,
+            ...parsedImage,
           },
         });
 
-        if (oldProfilePictureUrl) {
-          await utapi.deleteFiles(oldProfilePictureUrl.slice(oldProfilePictureUrl.lastIndexOf('/') + 1));
+        if (oldProfilePicture) {
+          await utapi.deleteFiles(oldProfilePicture.fileKey);
         }
 
-        return { user };
+        return { newProfilePicture };
       } catch (err: unknown) {
         console.log((err as Error).message);
         return;
@@ -51,3 +57,16 @@ export const ourFileRouter = {
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+
+async function parseImage(url: string) {
+  const imageData = await fetch(url);
+  const arrayBufferImage = await imageData.arrayBuffer();
+  const lqipImage = await lqip(Buffer.from(arrayBufferImage));
+
+  return {
+    height: lqipImage.metadata.originalHeight,
+    width: lqipImage.metadata.originalWidth,
+    src: url,
+    blurDataUrl: lqipImage.metadata.dataURIBase64,
+  };
+}

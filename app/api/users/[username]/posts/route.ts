@@ -23,7 +23,15 @@ export async function GET(req: NextRequest) {
             username: true,
             fullName: true,
             bio: true,
-            profilePictureUrl: true,
+            profilePicture: {
+              select: {
+                id: true,
+                height: true,
+                width: true,
+                src: true,
+                blurDataUrl: true,
+              },
+            },
           },
         },
         likes: {

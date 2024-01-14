@@ -33,7 +33,7 @@ function UserDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user.profilePictureUrl ?? undefined} />
+          <AvatarImage src={user.profilePicture?.src} />
           <AvatarFallback>{user.fullName.split(' ').reduce((prev, current) => prev + current[0], '')}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

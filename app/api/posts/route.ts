@@ -24,7 +24,15 @@ export async function GET() {
             username: true,
             fullName: true,
             bio: true,
-            profilePictureUrl: true,
+            profilePicture: {
+              select: {
+                id: true,
+                height: true,
+                width: true,
+                src: true,
+                blurDataUrl: true,
+              },
+            },
           },
         },
         likes: {
@@ -83,7 +91,15 @@ export async function POST(req: NextRequest) {
             username: true,
             fullName: true,
             bio: true,
-            profilePictureUrl: true,
+            profilePicture: {
+              select: {
+                id: true,
+                height: true,
+                width: true,
+                src: true,
+                blurDataUrl: true,
+              },
+            },
           },
         },
         likes: {

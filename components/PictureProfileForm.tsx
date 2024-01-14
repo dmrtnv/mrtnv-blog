@@ -26,7 +26,7 @@ function PictureProfileForm() {
         </Label>
       </div>
       {/* <div className='relative inline-block h-48 border-b-2 object-scale-down'>
-        <img src={user.profilePictureUrl} alt='profile picture' />
+        <img src={user.profilePicture.src} alt='profile picture' />
         <div className='absolute inset-0 flex items-center justify-center bg-black opacity-50'>
           <div className='aspect-square h-[min(192px,100%)] rounded-full'></div>
         </div>
