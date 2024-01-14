@@ -30,7 +30,7 @@ function PostPage({ params }: { params: { postId: string } }) {
 
   return (
     <>
-      <Post post={post} />
+      <Post post={post} isPostPage />
       <div id='comments'></div>
       {!!user && <NewComment post={post} />}
       <CommentsSection comments={comments ?? []} />

@@ -13,9 +13,10 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { deletePost, toggleLike } from '@/api/posts';
 import { fetchCommentsByPostId } from '@/api/comment';
 import PostOptions from './PostOptions';
+import { useRouter } from 'next/navigation';
 dayjs.extend(relativeTime);
 
-function Post({ post, linkable = false }: { post: PostType; linkable?: boolean }) {
+function Post({ post, isPostPage = false }: { post: PostType; isPostPage?: boolean }) {
   const queryClient = useQueryClient();
   const toggleLikeMutation = useMutation(toggleLike, { onSuccess: () => queryClient.invalidateQueries('posts') });
   const {
@@ -25,9 +26,18 @@ function Post({ post, linkable = false }: { post: PostType; linkable?: boolean }
   } = useQuery(['posts', post?.id, 'comments'], () => (post ? fetchCommentsByPostId(post?.id) : null));
   const deletePostMutation = useMutation(deletePost, { onSuccess: () => queryClient.invalidateQueries('posts') });
 
+  const router = useRouter();
+
   const { user } = useSession();
 
   if (!user || isCommentsError || isCommentsLoading) return null;
+
+  const handleDelete = () => {
+    deletePostMutation.mutate(post.id);
+    if (isPostPage) {
+      router.back();
+    }
+  };
 
   return (
     <article className='w-full rounded-xl border p-4'>
@@ -35,14 +45,10 @@ function Post({ post, linkable = false }: { post: PostType; linkable?: boolean }
         <UserHoverCard user={post.author} />
         <span>·</span>
         <span className='cursor-pointer text-sm'>{dayjs(post.createdAt).fromNow()}</span>
-        <PostOptions
-          className='ml-auto'
-          handleDelete={() => deletePostMutation.mutate(post.id)}
-          isAuthor={post.author.id === user.id}
-        />
+        <PostOptions className='ml-auto' handleDelete={handleDelete} isAuthor={post.author.id === user.id} />
       </div>
 
-      {linkable ? (
+      {!isPostPage ? (
         <Link href={`/posts/${post.id}`}>
           <div className='my-2'>{post.text}</div>
         </Link>
