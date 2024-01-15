@@ -14,8 +14,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 
-const URL = process.env.URL || 'http://localhost:3000/';
-
 const formSchema = z.object({
   username: z.string().trim().toLowerCase().min(1, { message: 'Enter username' }),
   password: z.string().min(1, { message: 'Enter paswword' }),
@@ -39,7 +37,7 @@ function LoginPage() {
     setIsLoading(true);
 
     try {
-      const result = await axios.post(`${URL}/api/login`, values);
+      const result = await axios.post(`/api/login`, values);
 
       setIsLoading(false);
 

@@ -13,8 +13,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
-const URL = process.env.URL || 'http://localhost:3000/';
-
 const formSchema = z
   .object({
     username: z
@@ -66,7 +64,7 @@ function SignupPage() {
     setIsLoading(true);
 
     try {
-      const result = await axios.post(`${URL}/api/signup`, values);
+      const result = await axios.post(`/api/signup`, values);
       console.log(result);
       form.reset();
       router.push('/profile');
