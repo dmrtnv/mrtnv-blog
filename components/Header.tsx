@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 import { useSession } from '@/contexts/SessionProvider';
 import UserDropdown from './UserDropdown';
+import { Bird } from 'lucide-react';
 
 function Header() {
   const { user, isLoading } = useSession();
@@ -13,7 +14,10 @@ function Header() {
   return (
     <div className='flex w-full items-center gap-2 border-b-2 bg-inherit p-4'>
       <Button variant='ghost' className='mr-auto text-lg' asChild>
-        <Link href='/'>Header</Link>
+        <Link href='/'>
+          <Bird className='mr-2' />
+          <span>MRTNV</span>
+        </Link>
       </Button>
 
       <ModeToggle />
