@@ -9,9 +9,20 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Next Blog',
+  title: 'MRTNV Blog',
   icons: {
-    icon: './favicon.ico',
+    icon: [
+      {
+        media: '(prefers-color-scheme: light)',
+        url: '/images/icon-light.svg',
+        href: '/images/icon-light.svg',
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: '/images/icon-dark.svg',
+        href: '/images/icon-dark.svg',
+      },
+    ],
   },
 };
 
