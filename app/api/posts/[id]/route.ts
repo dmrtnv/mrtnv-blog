@@ -72,11 +72,11 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: 'User is allowed to delete own posts only' }, { status: 403 });
     }
 
-    await db.like.deleteMany({ where: { postId: +postId } });
-    await db.comment.deleteMany({ where: { postId: +postId } });
-    await db.post.delete({ where: { id: +postId, authorId: user.id } });
+    // await db.like.deleteMany({ where: { postId: +postId } });
+    // await db.comment.deleteMany({ where: { postId: +postId } });
+    const deletedPost = await db.post.delete({ where: { id: +postId, authorId: user.id } });
 
-    return NextResponse.json({ post }, { status: 200 });
+    return NextResponse.json({ deletedPost }, { status: 200 });
   } catch (err: unknown) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json({ message: `Unable to delete post with id ${postId}` }, { status: 400 });

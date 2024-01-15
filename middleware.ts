@@ -29,6 +29,10 @@ const RequestsToAuthorize: RequestType[] = [
     methods: ['POST'],
     href: '/api/comments',
   },
+  {
+    methods: ['POST'],
+    href: '/api/likes',
+  },
 ];
 
 function verifyRequest(req: NextRequest) {

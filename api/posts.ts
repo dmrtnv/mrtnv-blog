@@ -6,11 +6,9 @@ export async function fetchPosts() {
   try {
     const result = await api.get('/posts');
 
-    const posts = PostArraySchema.parse(result.data.posts);
-
-    return posts;
+    return PostArraySchema.parse(result.data.posts);
   } catch (err) {
-    // console.error(err);
+    console.error(err);
     return [];
   }
 }
@@ -18,6 +16,7 @@ export async function fetchPosts() {
 export async function fetchPostById(postId: string | number) {
   try {
     const result = await api.get(`/posts/${postId}`);
+
     return PostSchema.parse(result.data.post);
   } catch (err) {
     return null;
@@ -26,11 +25,11 @@ export async function fetchPostById(postId: string | number) {
 
 export async function fetchPostsByUsername(username: string) {
   try {
-    const result = await api.get(`/users/${username}/posts`);
+    const result = await api.get(`/posts?username=${username}`);
 
     return PostArraySchema.parse(result.data.posts);
   } catch (err: unknown) {
-    // console.error(err);
+    console.error(err);
     return [];
   }
 }
@@ -39,27 +38,27 @@ export async function addPost(post: NewPostType) {
   try {
     const result = await api.post('/posts', post);
 
-    console.log(result.data.post);
+    console.log(result.data);
   } catch (err) {
-    // console.error(err);
-  }
-}
-
-export async function toggleLike(postId: number) {
-  try {
-    const result = await api.post(`/posts/${postId}/likes`);
-
-    console.log(result.data.post);
-  } catch (err: unknown) {
-    // console.error(err);
+    console.error(err);
   }
 }
 
 export async function deletePost(postId: number) {
   try {
     const result = await api.delete(`/posts/${postId}`);
-    console.log(result);
+    console.log(result.data);
   } catch (err) {
-    // console.error(err);
+    console.error(err);
+  }
+}
+
+export async function toggleLike(postId: number) {
+  try {
+    const result = await api.post('/likes', postId);
+
+    console.log(result.data);
+  } catch (err: unknown) {
+    console.error(err);
   }
 }
