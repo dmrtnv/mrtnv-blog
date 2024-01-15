@@ -14,7 +14,7 @@ function PictureProfileForm() {
 
   return (
     <div className='flex items-end justify-between'>
-      <div className=''>
+      <div className='w-full'>
         <Label>
           Profile Picture
           <UploadDropzone

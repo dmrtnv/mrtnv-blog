@@ -18,7 +18,7 @@ const RequestsToAuthorize: RequestType[] = [
     href: '/api/posts',
   },
   {
-    methods: ['GET'],
+    methods: ['GET', 'DELETE'],
     href: '/api/me',
   },
   {
