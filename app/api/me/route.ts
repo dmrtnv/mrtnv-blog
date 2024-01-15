@@ -3,7 +3,7 @@ import db from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { UTApi } from 'uploadthing/server';
 
-export const utapi = new UTApi();
+const utapi = new UTApi();
 
 export async function GET(req: NextRequest) {
   const userData = JSON.parse((await req.headers.get('user-data')) as string);

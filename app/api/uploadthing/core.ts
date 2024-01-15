@@ -5,7 +5,7 @@ import db from '@/lib/db';
 import { UTApi } from 'uploadthing/server';
 import lqip from 'lqip-modern';
 
-export const utapi = new UTApi();
+const utapi = new UTApi();
 
 const f = createUploadthing();
 
