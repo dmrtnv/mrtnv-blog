@@ -11,7 +11,7 @@ import { useSession } from '@/contexts/SessionProvider';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import CallToSignIn from '@/components/CallToSignIn';
 import { useQuery } from 'react-query';
-import { fetchPostsByUsername } from '@/api/posts';
+import { fetchPostsByUsername } from '@/apiRequests/posts';
 
 function UserPage({ params }: { params: { username: string } }) {
   const [user, setUser] = useState<UserType | null>(null);

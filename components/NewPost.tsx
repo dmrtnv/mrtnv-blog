@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { Input } from './ui/input';
 import { useQueryClient, useMutation } from 'react-query';
-import { addPost } from '@/api/posts';
+import { addPost } from '@/apiRequests/posts';
 
 const PostSchema = z.object({
   text: z.string().trim().min(1).max(280),

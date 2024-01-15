@@ -13,7 +13,7 @@ import {
 } from './ui/dialog';
 import { Button, buttonVariants } from './ui/button';
 import { Trash2 } from 'lucide-react';
-import { deleteMe } from '@/api/user';
+import { deleteMe } from '@/apiRequests/user';
 import { useRouter } from 'next/navigation';
 
 function DeleteUserDialog() {

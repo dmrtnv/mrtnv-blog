@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchPosts } from '@/api/posts';
+import { fetchPosts } from '@/apiRequests/posts';
 import CallToSignIn from '@/components/CallToSignIn';
 import Feed from '@/components/Feed';
 import NewPost from '@/components/NewPost';

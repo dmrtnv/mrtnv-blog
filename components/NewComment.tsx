@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Loader2 } from 'lucide-react';
 import { useMutation, useQueryClient } from 'react-query';
 import { z } from 'zod';
-import { addComment } from '@/api/comment';
+import { addComment } from '@/apiRequests/comment';
 import { PostType } from '@/types/Post';
 
 const NewCommentFormSchema = z.object({

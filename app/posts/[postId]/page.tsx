@@ -1,7 +1,7 @@
 'use client';
 
-import { fetchCommentsByPostId } from '@/api/comment';
-import { fetchPostById } from '@/api/posts';
+import { fetchCommentsByPostId } from '@/apiRequests/comment';
+import { fetchPostById } from '@/apiRequests/posts';
 import CommentsSection from '@/components/CommentsSection';
 import NewComment from '@/components/NewComment';
 import Post from '@/components/Post';
