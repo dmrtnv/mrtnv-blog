@@ -1,7 +1,6 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from './ui/image-dialog';
 import { UserType } from '@/types/User';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
