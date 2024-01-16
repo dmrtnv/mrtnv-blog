@@ -26,8 +26,12 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       const userIdentifiers = metadata.user;
 
+      console.log({ file });
+
       try {
         const parsedImage = await parseImage(file.url);
+
+        console.log({ parsedImage });
 
         const oldProfilePicture = await db.profilePicture.findFirst({ where: { userId: userIdentifiers.id } });
 
@@ -49,8 +53,8 @@ export const ourFileRouter = {
         }
 
         return { newProfilePicture };
-      } catch (err: unknown) {
-        console.log((err as Error).message);
+      } catch (err) {
+        console.error(err);
         return;
       }
     }),

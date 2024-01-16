@@ -45,6 +45,7 @@ export async function DELETE(req: Request) {
     const profilePicture = await db.profilePicture.findFirst({ where: { userId: userIdentifiers.id } });
 
     if (profilePicture) {
+      console.log({ profilePicture });
       await utapi.deleteFiles(profilePicture.fileKey);
     }
 
