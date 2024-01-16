@@ -12,6 +12,7 @@ function ImageDialog({ user }: { user: UserType }) {
     <Dialog>
       <DialogTrigger className='h-40 w-40 overflow-hidden rounded-full'>
         <Image
+          unoptimized
           alt='profile picture'
           src={img.src}
           width={img.width}
@@ -24,6 +25,7 @@ function ImageDialog({ user }: { user: UserType }) {
       </DialogTrigger>
       <DialogContent className='bg-transparent'>
         <Image
+          unoptimized
           alt='profile picture'
           src={img.src}
           width={img.width}
