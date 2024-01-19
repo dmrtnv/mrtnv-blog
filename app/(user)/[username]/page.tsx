@@ -15,37 +15,31 @@ import { fetchPostsByUsername } from '@/apiRequests/posts';
 
 function UserPage({ params }: { params: { username: string } }) {
   const [user, setUser] = useState<UserType | null>(null);
-
-  const [isLoading, setIsLoading] = useState(true);
+  const [isUserLoading, setIsUserLoading] = useState(true);
   const { user: sessionUser, isLoading: isSessionUserLoading } = useSession();
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsUserLoading(true);
 
     (async () => {
       const result = await api.get(`/users/${params.username}`);
 
       if (!result.data.user) {
         // router.back();
-        setIsLoading(false);
+        setIsUserLoading(false);
         return;
       }
 
       setUser(UserSchema.parse(result.data.user));
+      setIsUserLoading(false);
     })();
   }, [params.username]);
 
-  const { data: posts } = useQuery(
-    ['posts', { username: user?.username }],
-    () => fetchPostsByUsername(user?.username ?? ''),
-    {
-      onSettled: () => {
-        setIsLoading(false);
-      },
-    },
+  const { data: posts, isLoading: isPostsLoading } = useQuery(['posts', { username: user?.username }], () =>
+    fetchPostsByUsername(user?.username ?? ''),
   );
 
-  if (isLoading || isSessionUserLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
+  if (isUserLoading || isSessionUserLoading) return null;
 
   if (!user) {
     return (
@@ -65,7 +59,7 @@ function UserPage({ params }: { params: { username: string } }) {
 
       {sessionUser.username === user.username && <NewPost />}
 
-      {!!posts && <Feed posts={posts} />}
+      {isPostsLoading ? <Loader2 className='mx-auto my-2 animate-spin' /> : <Feed posts={posts} />}
     </>
   );
 }

@@ -25,6 +25,16 @@ function SessionProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      await getUser();
+    }, 30000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return <SessionContext.Provider value={{ user, getUser }}>{children}</SessionContext.Provider>;
 }
 
@@ -40,15 +50,21 @@ function useSession() {
   const { user, getUser } = useSessionContext();
   const [isLoading, setIsLoading] = useState(true);
 
-  const updateSession = () => {
-    (async () => {
-      setIsLoading(true);
-      await getUser();
-      setIsLoading(false);
-    })();
+  const updateSession = async () => {
+    setIsLoading(true);
+    await getUser();
+    setIsLoading(false);
   };
 
-  useEffect(updateSession, []);
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      if (!user) {
+        await updateSession();
+      }
+      setIsLoading(false);
+    })();
+  }, []);
 
   return { user, isLoading, updateSession };
 }

@@ -41,8 +41,6 @@ function verifyRequest(req: NextRequest) {
   );
 }
 
-// const RequestsToAuthorize = ['/api/logout', '/api/posts', '/api/posts/:id+', '/api/users/:username+', '/api/me'];
-
 export async function middleware(req: NextRequest) {
   if (verifyRequest(req)) {
     const authToken = req.cookies.get('auth')?.value;

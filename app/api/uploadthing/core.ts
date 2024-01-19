@@ -37,12 +37,8 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       const userIdentifiers = metadata.user;
 
-      console.log({ file });
-
       try {
         const parsedImage = await parseImage(file.url);
-
-        console.log({ parsedImage });
 
         const oldProfilePicture = await db.profilePicture.findFirst({ where: { userId: userIdentifiers.id } });
 

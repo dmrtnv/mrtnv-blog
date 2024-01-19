@@ -10,7 +10,7 @@ function ImageDialog({ user }: { user: UserType }) {
 
   return (
     <Dialog>
-      <DialogTrigger className='h-40 w-40 overflow-hidden rounded-full'>
+      <DialogTrigger className='flex h-40 w-40 flex-none overflow-hidden rounded-full'>
         <Image
           unoptimized
           alt='profile picture'
@@ -20,7 +20,8 @@ function ImageDialog({ user }: { user: UserType }) {
           placeholder='blur'
           blurDataURL={img.blurDataUrl}
           quality={100}
-          className={cn('object-cover', img.width > img.height && 'h-full')}
+          // className={cn('object-cover', img.width > img.height ? 'h-full' : 'w-full')}
+          className='min-h-full min-w-full object-cover'
         />
       </DialogTrigger>
       <DialogContent className='bg-transparent'>
@@ -33,7 +34,7 @@ function ImageDialog({ user }: { user: UserType }) {
           placeholder='blur'
           blurDataURL={img.blurDataUrl}
           quality={100}
-          className=''
+          className='flex max-h-[95vh] w-fit max-w-[95vw] object-contain'
         />
       </DialogContent>
     </Dialog>

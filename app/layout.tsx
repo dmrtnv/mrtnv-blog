@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className='flex h-screen w-full flex-col'>
             <Header />
             <ScrollArea className='flex-grow-1'>
-              <main className='mx-auto my-2 flex max-w-5xl flex-col gap-2 px-0'>{children}</main>
+              <main className='mx-auto my-2 flex max-w-5xl flex-col gap-2 px-2'>{children}</main>
             </ScrollArea>
           </div>
         </Providers>
