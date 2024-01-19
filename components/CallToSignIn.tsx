@@ -9,7 +9,7 @@ function CallToSignIn() {
           <Link href='/login' className='mr-2 text-sky-600 hover:underline'>
             Log In
           </Link>
-          <span>to use Next Blog!</span>
+          <span>to use MRTNV Blog!</span>
         </CardTitle>
       </CardHeader>
     </Card>
