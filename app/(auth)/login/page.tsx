@@ -38,6 +38,7 @@ function LoginPage() {
 
     try {
       const result = await axios.post(`/api/login`, values);
+      console.log(result.data);
 
       setIsLoading(false);
 

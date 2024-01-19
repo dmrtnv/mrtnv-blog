@@ -7,35 +7,51 @@ import { useContext, createContext, useState, useEffect } from 'react';
 type SessionContextType = {
   user: UserType | null;
   getUser: () => Promise<void>;
+  logout: () => void;
 };
 
 const SessionContext = createContext<SessionContextType | null>(null);
 
 function SessionProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserType | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getUser = async () => {
     try {
       const result = await api.get('/me');
 
       setUser(UserSchema.parse(result.data.user));
+
+      if (!isLoggedIn) {
+        setIsLoggedIn(true);
+      }
     } catch (err: unknown) {
       // console.error(err);
       setUser(null);
+      setIsLoggedIn(false);
     }
   };
 
+  const logout = () => {
+    setUser(null);
+    setIsLoggedIn(false);
+  };
+
   useEffect(() => {
-    const intervalId = setInterval(async () => {
-      await getUser();
-    }, 30000);
+    let intervalId: ReturnType<typeof setInterval>;
+
+    if (isLoggedIn) {
+      intervalId = setInterval(async () => {
+        await getUser();
+      }, 30000);
+    }
 
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [isLoggedIn]);
 
-  return <SessionContext.Provider value={{ user, getUser }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ user, getUser, logout }}>{children}</SessionContext.Provider>;
 }
 
 function useSessionContext() {
@@ -47,7 +63,7 @@ function useSessionContext() {
 }
 
 function useSession() {
-  const { user, getUser } = useSessionContext();
+  const { user, getUser, logout } = useSessionContext();
   const [isLoading, setIsLoading] = useState(true);
 
   const updateSession = async () => {
@@ -66,7 +82,7 @@ function useSession() {
     })();
   }, []);
 
-  return { user, isLoading, updateSession };
+  return { user, isLoading, updateSession, logout };
 }
 
 export { SessionProvider, useSession };

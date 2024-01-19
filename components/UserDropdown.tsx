@@ -13,13 +13,16 @@ import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 
 function UserDropdown() {
-  const { user } = useSession();
+  const { user, logout } = useSession();
 
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       const result = await api.get('/logout');
+      console.log(result.data);
+
+      logout();
 
       router.push('/');
     } catch (err: unknown) {

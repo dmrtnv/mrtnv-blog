@@ -27,10 +27,7 @@ export async function POST(request: Request) {
     username: user.username,
   });
 
-  const response = NextResponse.json(
-    { user: { id: user.id, username: user.username, fullName: user.fullName } },
-    { status: 200 },
-  );
+  const response = NextResponse.json({ message: 'Successful login' }, { status: 200 });
 
   response.cookies.set('auth', accessToken, accessCookieOptions);
 
