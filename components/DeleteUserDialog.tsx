@@ -15,12 +15,16 @@ import { Button, buttonVariants } from './ui/button';
 import { Trash2 } from 'lucide-react';
 import { deleteMe } from '@/apiRequests/user';
 import { useRouter } from 'next/navigation';
+import { useSession } from '@/contexts/SessionProvider';
 
 function DeleteUserDialog() {
   const router = useRouter();
+  const { logout } = useSession();
 
   const handleDelete = async () => {
     await deleteMe();
+
+    logout();
 
     router.push('/');
   };
