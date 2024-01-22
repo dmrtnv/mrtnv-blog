@@ -14,12 +14,10 @@ function HomePage() {
 
   if (isUserLoading) return <Loader2 className='mx-auto my-2 animate-spin' />;
 
-  if (!user) return <CallToSignIn />;
-
   return (
     <>
-      <NewPost />
-      {isLoading ? <Loader2 className='mx-auto my-2 animate-spin' /> : <Feed posts={posts ?? []} />}
+      {user ? <NewPost /> : <CallToSignIn />}
+      {isLoading ? <Loader2 className='mx-auto my-2 animate-spin' /> : <Feed posts={posts ?? []} user={user} />}
     </>
   );
 }

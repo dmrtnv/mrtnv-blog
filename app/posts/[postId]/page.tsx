@@ -2,6 +2,7 @@
 
 import { fetchCommentsByPostId } from '@/apiRequests/comment';
 import { fetchPostById } from '@/apiRequests/posts';
+import CallToSignIn from '@/components/CallToSignIn';
 import CommentsSection from '@/components/CommentsSection';
 import NewComment from '@/components/NewComment';
 import Post from '@/components/Post';
@@ -30,8 +31,10 @@ function PostPage({ params }: { params: { postId: string } }) {
 
   return (
     <>
-      <Post post={post} isPostPage />
+      <h1 className='text-3xl font-bold text-muted-foreground'>Post</h1>
+      <Post user={user} post={post} isPostPage />
       <div id='comments'></div>
+      <h1 className='text-2xl font-bold text-muted-foreground'>Comments</h1>
       {!!user && <NewComment post={post} />}
       <CommentsSection comments={comments ?? []} />
     </>

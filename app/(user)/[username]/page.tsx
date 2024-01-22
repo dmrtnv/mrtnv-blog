@@ -51,15 +51,13 @@ function UserPage({ params }: { params: { username: string } }) {
     );
   }
 
-  if (!sessionUser) return <CallToSignIn />;
-
   return (
     <>
       <UserCard user={user} totalPosts={posts?.length ?? 0} />
 
-      {sessionUser.username === user.username && <NewPost />}
+      {sessionUser?.username === user.username && <NewPost />}
 
-      {isPostsLoading ? <Loader2 className='mx-auto my-2 animate-spin' /> : <Feed posts={posts} />}
+      {isPostsLoading ? <Loader2 className='mx-auto my-2 animate-spin' /> : <Feed user={sessionUser} posts={posts} />}
     </>
   );
 }

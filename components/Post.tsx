@@ -14,9 +14,10 @@ import { deletePost, toggleLike } from '@/apiRequests/posts';
 import { fetchCommentsByPostId } from '@/apiRequests/comment';
 import PostOptions from './PostOptions';
 import { useRouter } from 'next/navigation';
+import { UserType } from '@/types/User';
 dayjs.extend(relativeTime);
 
-function Post({ post, isPostPage = false }: { post: PostType; isPostPage?: boolean }) {
+function Post({ post, user, isPostPage = false }: { post: PostType; user: UserType | null; isPostPage?: boolean }) {
   const queryClient = useQueryClient();
   const toggleLikeMutation = useMutation(toggleLike, { onSuccess: () => queryClient.invalidateQueries('posts') });
   const {
@@ -28,9 +29,7 @@ function Post({ post, isPostPage = false }: { post: PostType; isPostPage?: boole
 
   const router = useRouter();
 
-  const { user } = useSession();
-
-  if (!user || isCommentsError || isCommentsLoading) return null;
+  if (isCommentsError || isCommentsLoading) return null;
 
   const handleDelete = () => {
     deletePostMutation.mutate(post.id);
@@ -45,7 +44,7 @@ function Post({ post, isPostPage = false }: { post: PostType; isPostPage?: boole
         <UserHoverCard user={post.author} />
         <span>·</span>
         <span className='cursor-pointer text-sm'>{dayjs(post.createdAt).fromNow()}</span>
-        <PostOptions className='ml-auto' handleDelete={handleDelete} isAuthor={post.author.id === user.id} />
+        <PostOptions className='ml-auto' handleDelete={handleDelete} isAuthor={post.author.id === user?.id} />
       </div>
 
       {!isPostPage ? (
@@ -58,8 +57,9 @@ function Post({ post, isPostPage = false }: { post: PostType; isPostPage?: boole
 
       <div className='flex items-center gap-8'>
         <LikeButton
+          disabled={!user}
           likes={post.likes}
-          isActive={post.likes.some((like) => like.user.id === user.id)}
+          isActive={post.likes.some((like) => like.user.id === user?.id)}
           handleClick={() => toggleLikeMutation.mutate(post.id)}
         />
 
