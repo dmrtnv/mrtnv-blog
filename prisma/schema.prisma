@@ -6,16 +6,16 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
   id             String          @id @default(cuid())
   username       String          @unique
   fullName       String
-  bio            String?         @db.Text
+  bio            String?
   passwordHash   String
   posts          Post[]
   comments       Comment[]
@@ -25,7 +25,7 @@ model User {
 
 model Post {
   id        Int         @id @default(autoincrement())
-  text      String      @db.Text
+  text      String
   author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   createdAt DateTime    @default(now())
@@ -36,7 +36,7 @@ model Post {
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  text      String   @db.Text
+  text      String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
